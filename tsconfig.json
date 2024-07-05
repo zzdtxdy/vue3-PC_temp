@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 指定 ECMAScript 目标版本
+    "useDefineForClassFields": true, // 使用 define 属性声明类字段
+    "module": "ESNext", // 指定生成代码的模块标准
+    "moduleResolution": "Node", // 指定模块解析策略，使用 Node.js 风格
+    "types": ["vite/client", "element-plus/global", "unplugin-icons/types/vue"], // 指定包含的类型声明文件
+
+    /* 严格的类型检查选项 */
+    "strict": true, // 启用所有严格类型检查选项
+    // "noImplicitAny": true, // 对隐含的 any 类型的表达式和声明报错
+    // "strictNullChecks": true, // 启用严格的空值检查
+    // "strictFunctionTypes": true, // 启用严格的函数类型检查
+    // "strictBindCallApply": true, // 启用严格的 bind、call 和 apply 方法检查
+    // "strictPropertyInitialization": true, // 启用严格的属性初始化检查
+    // "noImplicitThis": true, // 对隐含的 this 类型的表达式报错
+    // "alwaysStrict": true, // 在每个源文件中解析为严格模式并发出 "use strict"
+
+    "jsx": "preserve", // 指定 JSX 代码的处理方式
+    "resolveJsonModule": true, // 允许导入 JSON 模块
+    "isolatedModules": true, // 将每个文件作为单独的模块处理
+    "esModuleInterop": true, // 启用对 ES 模块语义的兼容支持
+    "lib": ["ESNext", "DOM"], // 指定要包含在编译中的库
+    "skipLibCheck": true, // 跳过所有声明文件的类型检查
+    "noEmit": true, // 不生成输出文件
+    "baseUrl": "./", // 指定解析非相对模块的基地址
+    "paths": {
+      // 配置路径映射，相对于 baseUrl
+      "@": ["src"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    // 包含在编译中的文件
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "./*.d.ts",
+    "mock/**/*.ts",
+    "src/auto-imports.d.ts",
+    "vite.config.ts"
+  ],
+
+  "exclude": [
+    // 排除在编译之外的文件和目录
+    "node_modules",
+    "dist",
+    "**/*.js"
+  ]
+}
