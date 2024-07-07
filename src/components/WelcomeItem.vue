@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Author: zhongzd
+ * @Date: 2024-07-06 21:04:59
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-07-07 13:10:53
+ * @FilePath: \项目\vue3-PC_temp\src\components\WelcomeItem.vue
+-->
 <template>
   <div class="item">
     <i>
@@ -23,6 +31,7 @@
   margin-left: 1rem;
 }
 i {
+  position: relative;
   display: flex;
   place-content: center;
   place-items: center;

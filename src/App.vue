@@ -34,9 +34,8 @@ header {
   line-height: 1.5;
 }
 .logo {
-  width: 100px;
-  position: relative;
   display: block;
+  width: 100px;
   margin: 0 auto 2rem;
 }
 nav {
