@@ -1,3 +1,6 @@
+/* 配置 TypeScript 编译器：指定编译选项、文件路径和其他相关设置，控制 TypeScript 编译器如何处理项目中的代码。
+类型检查：提供严格的类型检查，帮助捕捉类型错误。
+编译代码：将 TypeScript 代码编译为 JavaScript 代码，适用于不同的环境和目标版本。 */
 {
   "compilerOptions": {
     "target": "ESNext", // 指定 ECMAScript 目标版本

@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-04 19:04:54
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-05 10:03:13
+ * @LastEditTime: 2024-07-11 14:35:40
  * @FilePath: \zzd\vue3-PC_temp\src\App.vue
 -->
 <script setup lang="ts">
@@ -17,7 +17,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper">
       <HelloWorld msg="You did it!"></HelloWorld>
-
+      <el-table></el-table>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
