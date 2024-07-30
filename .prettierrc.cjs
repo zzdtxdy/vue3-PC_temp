@@ -10,7 +10,7 @@ module.exports = {
   trailingComma: 'none', // 去除对象最末尾元素跟随的逗号
   useTabs: false, // 不使用缩进符，而使用空格
   jsxSingleQuote: false, // jsx 不使用单引号，而使用双引号
-  // arrowParens: 'always', // 箭头函数，只有一个参数的时候，也需要括号
+  arrowParens: 'always', // 箭头函数，只有一个参数的时候，也需要括号
   rangeStart: 0, // 每个文件格式化的范围是文件的全部内容
   proseWrap: 'preserve', // "always" - 超出长度自动折行"never" - 用不折行"preserve" - 遵循原有格式. v1.9.0 及以上支持
   // 换行符使用 lf 结尾是 可选值"<auto|lf|crlf|cr>"

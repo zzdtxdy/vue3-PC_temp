@@ -35,11 +35,11 @@
   },
   "include": [
     // 包含在编译中的文件
-    "src/**/*.d.ts",
+    "src/**/*.d.ts", // 自动导入TS类型声明文件引入
+    "src/**/*.ts",
     "src/**/*.vue",
     "./*.d.ts",
     "mock/**/*.ts",
-    "src/auto-imports.d.ts",
     "vite.config.ts"
   ],
 

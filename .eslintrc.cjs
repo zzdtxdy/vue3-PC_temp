@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Author: zhongzd
+ * @Date: 2024-07-04 19:04:54
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-07-29 17:25:45
+ * @FilePath: \zzd\vue3-PC_temp\.eslintrc.cjs
+ */
 module.exports = {
   // 设置 ESLint 的根目录
   root: true,
@@ -16,6 +24,7 @@ module.exports = {
   extends: [
     'eslint:recommended', // 使用 ESLint 推荐的规则
     'plugin:vue/vue3-recommended', // 使用 Vue 3 推荐的规则
+    './.eslintrc-auto-import.json', // 自动导入函数 eslint 规则引入
     'plugin:@typescript-eslint/recommended', // 使用 TypeScript 推荐的规则
     'plugin:prettier/recommended', // 使用 Prettier 推荐的规则，禁用与 Prettier 冲突的 ESLint 规则
     'prettier' // eslint-config-prettier 的缩写，确保 Prettier 的规则优先
@@ -40,32 +49,17 @@ module.exports = {
 
   // 自定义规则
   rules: {
-    // 强制 Prettier 规则
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true, // 使用单引号
-        semi: false, // 不使用分号
-        trailingComma: 'none', // 不使用尾随逗号
-        arrowParens: 'avoid', // 箭头函数只有一个参数时不使用括号
-        printWidth: 130 // 每行最大长度为 130
-      }
-    ],
     // 关闭 no-undef 规则
     'no-undef': 'off',
-    // 强制多字组件名称（忽略某些组件名称）
-    'vue/multi-word-component-names': [
-      'error',
-      {
-        ignores: [] // 可以在这里添加不需要多字名称的组件
-      }
-    ]
+    '@typescript-eslint/no-explicit-any': 'off', // 关闭any类型的警告
+    'vue/multi-word-component-names': 0 // 不强制要求组件命名 解决：index.vue组件命名问题（组件名称不合规范）
   },
   // 全局变量
   globals: {
     defineProps: 'readonly', // 定义组件 props 的辅助函数
     defineEmits: 'readonly', // 定义组件 emits 的辅助函数
     defineExpose: 'readonly', // 定义组件 expose 的辅助函数
-    withDefaults: 'readonly' // 定义 props 默认值的辅助函数
+    withDefaults: 'readonly', // 定义 props 默认值的辅助函数
+    OptionType: 'readonly'
   }
 }
