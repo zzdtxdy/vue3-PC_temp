@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-09 19:06:11
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-30 13:41:20
+ * @LastEditTime: 2024-07-30 19:20:10
  * @FilePath: \zzd\vue3-PC_temp\vite.config.ts
  */
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from 'vite'
@@ -27,8 +27,26 @@ const pathSrc = resolvePath('src')
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+  // 用于在 Vite 项目中加载环境变量
   const env = loadEnv(mode, process.cwd())
   return {
+    server: {
+      // 允许IP访问
+      host: '0.0.0.0',
+      // 应用端口 (默认:3000)
+      port: Number(env.VITE_APP_PORT),
+      // 运行是否自动打开浏览器
+      open: true,
+      proxy: {
+        /** 代理前缀为 /dev-api 的请求  */
+        [env.VITE_APP_BASE_API]: {
+          changeOrigin: true,
+          // 接口地址
+          target: env.VITE_APP_API_URL,
+          rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
+        }
+      }
+    },
     // 配置 Vite 插件
     plugins: [
       vue(),

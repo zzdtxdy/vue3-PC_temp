@@ -4,6 +4,7 @@ import { resetRouter } from '@/router'
 import { store } from '@/stores'
 
 import { TOKEN_KEY } from '@/enums/CacheEnum'
+import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({

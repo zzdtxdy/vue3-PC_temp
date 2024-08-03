@@ -1,6 +1,6 @@
-import request from "@/utils/request";
+import request from '@/utils/request'
 
-const USER_BASE_URL = "/api/v1/users";
+const USER_BASE_URL = '/api/v1/users'
 
 class UserAPI {
   /**
@@ -11,8 +11,8 @@ class UserAPI {
   static getInfo() {
     return request<any, UserInfo>({
       url: `${USER_BASE_URL}/me`,
-      method: "get",
-    });
+      method: 'get'
+    })
   }
 
   /**
@@ -23,9 +23,9 @@ class UserAPI {
   static getPage(queryParams: UserPageQuery) {
     return request<any, PageResult<UserPageVO[]>>({
       url: `${USER_BASE_URL}/page`,
-      method: "get",
-      params: queryParams,
-    });
+      method: 'get',
+      params: queryParams
+    })
   }
 
   /**
@@ -37,8 +37,8 @@ class UserAPI {
   static getFormData(userId: number) {
     return request<any, UserForm>({
       url: `${USER_BASE_URL}/${userId}/form`,
-      method: "get",
-    });
+      method: 'get'
+    })
   }
 
   /**
@@ -49,9 +49,9 @@ class UserAPI {
   static add(data: UserForm) {
     return request({
       url: `${USER_BASE_URL}`,
-      method: "post",
-      data: data,
-    });
+      method: 'post',
+      data: data
+    })
   }
 
   /**
@@ -63,9 +63,9 @@ class UserAPI {
   static update(id: number, data: UserForm) {
     return request({
       url: `${USER_BASE_URL}/${id}`,
-      method: "put",
-      data: data,
-    });
+      method: 'put',
+      data: data
+    })
   }
 
   /**
@@ -77,9 +77,9 @@ class UserAPI {
   static updatePassword(id: number, password: string) {
     return request({
       url: `${USER_BASE_URL}/${id}/password`,
-      method: "patch",
-      params: { password: password },
-    });
+      method: 'patch',
+      params: { password: password }
+    })
   }
 
   /**
@@ -90,17 +90,17 @@ class UserAPI {
   static deleteByIds(ids: string) {
     return request({
       url: `${USER_BASE_URL}/${ids}`,
-      method: "delete",
-    });
+      method: 'delete'
+    })
   }
 
   /** 下载用户导入模板 */
   static downloadTemplate() {
     return request({
       url: `${USER_BASE_URL}/template`,
-      method: "get",
-      responseType: "arraybuffer",
-    });
+      method: 'get',
+      responseType: 'arraybuffer'
+    })
   }
 
   /**
@@ -111,10 +111,10 @@ class UserAPI {
   static export(queryParams: UserPageQuery) {
     return request({
       url: `${USER_BASE_URL}/export`,
-      method: "get",
+      method: 'get',
       params: queryParams,
-      responseType: "arraybuffer",
-    });
+      responseType: 'arraybuffer'
+    })
   }
 
   /**
@@ -124,41 +124,41 @@ class UserAPI {
    * @param file 导入文件
    */
   static import(deptId: number, file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
+    const formData = new FormData()
+    formData.append('file', file)
     return request({
       url: `${USER_BASE_URL}/import`,
-      method: "post",
+      method: 'post',
       params: { deptId: deptId },
       data: formData,
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }
 
-export default UserAPI;
+export default UserAPI
 
 /** 登录用户信息 */
 export interface UserInfo {
   /** 用户ID */
-  userId?: number;
+  userId?: number
 
   /** 用户名 */
-  username?: string;
+  username?: string
 
   /** 昵称 */
-  nickname?: string;
+  nickname?: string
 
   /** 头像URL */
-  avatar?: string;
+  avatar?: string
 
   /** 角色 */
-  roles: string[];
+  roles: string[]
 
   /** 权限 */
-  perms: string[];
+  perms: string[]
 }
 
 /**
@@ -166,67 +166,67 @@ export interface UserInfo {
  */
 export interface UserPageQuery extends PageQuery {
   /** 搜索关键字 */
-  keywords?: string;
+  keywords?: string
 
   /** 用户状态 */
-  status?: number;
+  status?: number
 
   /** 部门ID */
-  deptId?: number;
+  deptId?: number
 
   /** 开始时间 */
-  startTime?: string;
+  startTime?: string
 
   /** 结束时间 */
-  endTime?: string;
+  endTime?: string
 }
 
 /** 用户分页对象 */
 export interface UserPageVO {
   /** 用户头像URL */
-  avatar?: string;
+  avatar?: string
   /** 创建时间 */
-  createTime?: Date;
+  createTime?: Date
   /** 部门名称 */
-  deptName?: string;
+  deptName?: string
   /** 用户邮箱 */
-  email?: string;
+  email?: string
   /** 性别 */
-  genderLabel?: string;
+  genderLabel?: string
   /** 用户ID */
-  id?: number;
+  id?: number
   /** 手机号 */
-  mobile?: string;
+  mobile?: string
   /** 用户昵称 */
-  nickname?: string;
+  nickname?: string
   /** 角色名称，多个使用英文逗号(,)分割 */
-  roleNames?: string;
+  roleNames?: string
   /** 用户状态(1:启用;0:禁用) */
-  status?: number;
+  status?: number
   /** 用户名 */
-  username?: string;
+  username?: string
 }
 
 /** 用户表单类型 */
 export interface UserForm {
   /** 用户头像 */
-  avatar?: string;
+  avatar?: string
   /** 部门ID */
-  deptId?: number;
+  deptId?: number
   /** 邮箱 */
-  email?: string;
+  email?: string
   /** 性别 */
-  gender?: number;
+  gender?: number
   /** 用户ID */
-  id?: number;
+  id?: number
   /** 手机号 */
-  mobile?: string;
+  mobile?: string
   /** 昵称 */
-  nickname?: string;
+  nickname?: string
   /** 角色ID集合 */
-  roleIds?: number[];
+  roleIds?: number[]
   /** 用户状态(1:正常;0:禁用) */
-  status?: number;
+  status?: number
   /** 用户名 */
-  username?: string;
+  username?: string
 }

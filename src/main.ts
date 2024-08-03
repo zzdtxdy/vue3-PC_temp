@@ -1,10 +1,10 @@
 /*
  * @Description:
  * @Author: zhongzd
- * @Date: 2024-07-06 21:04:59
+ * @Date: 2024-07-09 19:06:11
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-06 21:40:35
- * @FilePath: \项目\vue3-PC_temp\src\main.ts
+ * @LastEditTime: 2024-07-30 19:25:27
+ * @FilePath: \zzd\vue3-PC_temp\src\main.ts
  */
 import './assets/main.css'
 
