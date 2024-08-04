@@ -3,20 +3,17 @@
  * @Author: zhongzd
  * @Date: 2024-07-09 19:06:11
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-30 19:25:27
- * @FilePath: \zzd\vue3-PC_temp\src\main.ts
+ * @LastEditTime: 2024-08-03 11:17:37
+ * @FilePath: \项目\vue3-PC_temp\src\main.ts
  */
 import './assets/main.css'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
 import App from './App.vue'
-import router from './router'
+import setupPlugins from '@/plugins'
 
 const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
-
+// 注册插件
+app.use(setupPlugins)
 app.mount('#app')

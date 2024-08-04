@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-07-04 19:04:54
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-29 15:59:18
- * @FilePath: \zzd\vue3-PC_temp\src\stores\index.ts
+ * @LastEditTime: 2024-08-04 11:07:06
+ * @FilePath: \项目\vue3-PC_temp\src\store\index.ts
  */
 import type { App } from 'vue'
 import { createPinia } from 'pinia'
@@ -17,7 +17,7 @@ export function setupStore(app: App<Element>) {
 }
 
 // export * from './modules/app'
-// export * from './modules/permission'
+export * from './modules/permission'
 // export * from './modules/settings'
 // export * from './modules/tagsView'
 export * from './modules/user'

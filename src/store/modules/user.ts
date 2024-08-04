@@ -1,7 +1,7 @@
 import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
 import { resetRouter } from '@/router'
-import { store } from '@/stores'
+import { store } from '@/store'
 
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 import { defineStore } from 'pinia'

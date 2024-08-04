@@ -7,7 +7,7 @@
  * @FilePath: \zzd\vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
-import { useUserStoreHook } from '@/stores/modules/user'
+import { useUserStoreHook } from '@/store/modules/user'
 import { ResultEnum } from '@/enums/ResultEnum'
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 
