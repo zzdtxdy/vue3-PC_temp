@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-08-03 11:14:09
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-08 16:08:47
- * @FilePath: \zzd\vue3-PC_temp\src\plugins\permission.ts
+ * @LastEditTime: 2024-08-08 15:41:32
+ * @FilePath: \zzd\vue3-PC_temp\src\router\modules\dynamicRouter.ts
  */
 import { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
 
@@ -44,8 +44,7 @@ export function setupPermission() {
 
             next()
           }
-          /* store没有角色 重新请求拿角色 
-           场景：1.持久化存储时只清除角色 2.没有持久化导致该用户角色被清空 */
+          // store没有角色 重新请求拿角色
         } else {
           const permissionStore = usePermissionStore()
           try {
