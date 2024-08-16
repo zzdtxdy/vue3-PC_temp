@@ -10,6 +10,7 @@ declare module '*.vue' {
 // TypeScript 类型提示都为 string： https://github.com/vitejs/vite/issues/6930
 // 这些环境变量通常在项目根目录的 .env 文件中定义，并以 VITE_ 前缀开头，这是 Vite 识别环境变量的方式。
 interface ImportMetaEnv {
+  VITE_GLOB_APP_TITLE: any
   /** 应用端口 */
   VITE_APP_PORT: number
   /** API 基础路径(代理前缀) */

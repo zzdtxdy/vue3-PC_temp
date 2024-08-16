@@ -38,6 +38,7 @@
     "src/**/*.d.ts", // 自动导入TS类型声明文件引入
     "src/**/*.ts",
     "src/**/*.vue",
+    "src/**/*.tsx",
     "./*.d.ts",
     "mock/**/*.ts",
     "vite.config.ts"

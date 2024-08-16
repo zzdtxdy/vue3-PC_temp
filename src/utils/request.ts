@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-30 10:21:30
+ * @LastEditTime: 2024-08-15 15:52:36
  * @FilePath: \zzd\vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
@@ -59,7 +59,7 @@ service.interceptors.response.use(
           type: 'info'
         })
         useUserStoreHook()
-          .resetToken()
+          .resetTokenRouter()
           .then(() => {
             location.reload()
           })

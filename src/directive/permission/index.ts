@@ -3,10 +3,10 @@
  * @Author: zhongzd
  * @Date: 2024-08-04 11:43:07
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-04 11:56:51
- * @FilePath: \项目\vue3-PC_temp\src\directive\permission\index.ts
+ * @LastEditTime: 2024-08-15 17:08:36
+ * @FilePath: \zzd\vue3-PC_temp\src\directive\permission\index.ts
  */
-import { hasAuth } from '@/plugins/permission'
+import { useAuthStore } from '@/store'
 import { Directive, DirectiveBinding } from 'vue'
 
 /**
@@ -17,7 +17,7 @@ export const hasPerm: Directive = {
     // DOM绑定需要的按钮权限标识 // value 获取用户使用自定义指令绑定的内容
     const { value: requiredPerms } = binding
     if (requiredPerms) {
-      if (!hasAuth(requiredPerms)) {
+      if (!useAuthStore.hasAuth(requiredPerms)) {
         el.parentNode && el.parentNode.removeChild(el)
       }
     } else {
@@ -42,3 +42,7 @@ export const hasRole: Directive = {
     }
   }
 }
+function hasAuth(requiredPerms: any) {
+  throw new Error('Function not implemented.')
+}
+

@@ -1,84 +1,37 @@
-<!--
- * @Description: 
- * @Author: zhongzd
- * @Date: 2024-07-04 19:04:54
- * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-11 14:35:40
- * @FilePath: \zzd\vue3-PC_temp\src\App.vue
--->
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!"></HelloWorld>
-      <el-table></el-table>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <el-config-provider :locale="locale" :size="size">
+    <!-- 开启水印 -->
+    <el-watermark
+      v-if="watermarkEnabled"
+      :font="{ color: fontColor }"
+      :content="defaultSettings.watermarkContent"
+      :z-index="9999"
+      class="wh-full"
+    >
+      <router-view />
+    </el-watermark>
+    <!-- 关闭水印 -->
+    <router-view v-else />
+  </el-config-provider>
 </template>
 
-<style scoped>
-header {
-  max-height: 100vh;
-  line-height: 1.5;
-}
-.logo {
-  display: block;
-  width: 100px;
-  margin: 0 auto 2rem;
-}
-nav {
-  width: 100%;
-  margin-top: 2rem;
-  font-size: 12px;
-  text-align: center;
-}
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-nav a:first-of-type {
-  border: 0;
-}
+<script setup lang="ts">
+import { useAppStore, useSettingsStore } from "@/store";
+import defaultSettings from "@/settings";
+import { ThemeEnum } from "@/enums/ThemeEnum";
+import { SizeEnum } from "@/enums/SizeEnum";
 
-@media (width >= 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-  header .wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    place-items: flex-start;
-  }
-  nav {
-    padding: 1rem 0;
-    margin-top: 1rem;
-    margin-left: -1rem;
-    font-size: 1rem;
-    text-align: left;
-  }
-}
-</style>
+const appStore = useAppStore();
+const settingsStore = useSettingsStore();
+
+const locale = computed(() => appStore.locale);
+const size = computed(() => appStore.size as SizeEnum);
+const watermarkEnabled = computed(() => settingsStore.watermarkEnabled);
+
+// 明亮/暗黑主题水印字体颜色适配
+const fontColor = computed(() => {
+  return settingsStore.theme === ThemeEnum.DARK
+    ? "rgba(255, 255, 255, .15)"
+    : "rgba(0, 0, 0, .15)";
+});
+</script>

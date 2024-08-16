@@ -1,15 +1,23 @@
+/*
+ * @Description: 用户信息
+ * @Author: zhongzd
+ * @Date: 2024-08-05 09:18:21
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-08-16 13:55:48
+ * @FilePath: \zzd\vue3-PC_temp\src\store\modules\user.ts
+ */
 import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
 import { resetRouter } from '@/router'
-import { store } from '@/store'
+import { store, useAuthStore } from '@/store'
 
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 import { defineStore } from 'pinia'
-
+import { clearToken } from '@/utils'
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({
-    roles: [],
-    perms: []
+    roles: [], // 角色
+    perms: [] // 权限
   })
 
   /**
@@ -36,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
   function getUserInfo() {
     return new Promise<UserInfo>((resolve, reject) => {
       UserAPI.getInfo()
-        .then((data) => {
+        .then((data: UserInfo) => {
           if (!data) {
             reject('Verification failed, please Login again.')
             return
@@ -46,6 +54,8 @@ export const useUserStore = defineStore('user', () => {
             return
           }
           Object.assign(user.value, { ...data })
+          useAuthStore().setPerms(data.perms)
+          useAuthStore().setRoles(data.roles)
           resolve(data)
         })
         .catch((error) => {
@@ -58,9 +68,9 @@ export const useUserStore = defineStore('user', () => {
   function logout() {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.logout()
-        .then(() => {
-          localStorage.setItem(TOKEN_KEY, '')
-          location.reload() // 清空路由
+        .then(async () => {
+          await resetTokenRouter()
+          location.reload() // 重新加载页面
           resolve()
         })
         .catch((error) => {
@@ -69,11 +79,10 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  // remove token
-  function resetToken() {
-    console.log('resetToken')
+  // remove token Router
+  function resetTokenRouter() {
     return new Promise<void>((resolve) => {
-      localStorage.setItem(TOKEN_KEY, '')
+      clearToken()
       resetRouter()
       resolve()
     })
@@ -84,7 +93,7 @@ export const useUserStore = defineStore('user', () => {
     login,
     getUserInfo,
     logout,
-    resetToken
+    resetTokenRouter
   }
 })
 

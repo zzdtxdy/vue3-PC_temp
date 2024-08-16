@@ -1,6 +1,7 @@
+import { HOME_URL } from '@/settings'
 import { RouteRecordRaw } from 'vue-router'
 
-export const Layout = () => import('@/views/layout/index.vue')
+export const Layout = () => import('@/layout/index.vue')
 
 // 静态路由
 export const staticRouter: RouteRecordRaw[] = [
@@ -10,8 +11,6 @@ export const staticRouter: RouteRecordRaw[] = [
     meta: { hidden: true },
     children: [
       {
-        /* :path 是一个动态参数，它可以匹配任何路径段。
-        (.*) 是一个正则表达式，它表示 :path 参数可以匹配任意字符，包括斜杠 /。这意味着 :path 可以匹配 /redirect 之后的任何路径。 */
         path: '/redirect/:path(.*)', // 匹配 /redirect 后面跟随的任何路径
         component: () => import('@/views/redirect/index.vue')
       }
@@ -23,7 +22,13 @@ export const staticRouter: RouteRecordRaw[] = [
     component: () => import('@/views/login/index.vue'),
     meta: { hidden: true }
   },
-
+  {
+    path: '/layout',
+    name: 'layout',
+    component: Layout,
+    redirect: HOME_URL,
+    children: []
+  },
   {
     path: '/',
     name: '/',
@@ -31,27 +36,17 @@ export const staticRouter: RouteRecordRaw[] = [
     redirect: '/dashboard',
     children: [
       {
-        path: 'dashboard',
+        path: HOME_URL,
         component: () => import('@/views/dashboard/index.vue'),
         // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
         // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
         name: 'Dashboard',
         meta: {
-          title: 'dashboard',
+          title: '首页',
           icon: 'homepage',
           affix: true,
           keepAlive: true
         }
-      },
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401.vue'),
-        meta: { hidden: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404.vue'),
-        meta: { hidden: true }
       }
     ]
   }
@@ -109,4 +104,32 @@ export const staticRouter: RouteRecordRaw[] = [
      }*/
 ]
 
-export const errorRouter = []
+/**
+ * errorRouter (错误页面路由)
+ */
+export const errorRouter = [
+  {
+    path: '/401',
+    name: '401',
+    component: () => import('@/views/error-page/401.vue'),
+    meta: {
+      title: '401页面',
+      hidden: true
+    }
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/error-page/404.vue'),
+    meta: {
+      title: '404页面',
+      hidden: true
+    }
+  },
+  // 是一种路径参数匹配模式，用于捕获所有未匹配的路径
+  /* :pathMatch 是一个动态路径参数表示在 URL 中匹配相应部分的任意值，(.*) 是一个正则表达式，表示匹配任意字符，* 表示可以匹配任意长度。 */
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404'
+  }
+]
