@@ -1,7 +1,7 @@
 import { MenuTypeEnum } from '@/enums/MenuTypeEnum'
 
-/* 用于在全局作用域中声明变量、函数、类型等。这些变量、函数、类型等就可以在全局范围内被访问和使用，
-而不需要通过任何模块或命名空间的引用 */
+/* declare global 是 TypeScript 中用来扩展全局作用域的语法。
+它允许你在全局作用域中添加或修改类型声明，而不必在每个文件中重复声明。 */
 declare global {
   /**
    * 响应数据
@@ -111,6 +111,10 @@ declare global {
   }
   /* 当你想要将相关的代码（如接口、类、函数等）组织在一起，以便于它们之间的交互和复用，同时避免全局作用域的污染时，你会使用declare namespace。
   此外，命名空间还可以用于声明合并，即将来自不同文件的相同命名空间的声明合并到一个命名空间中 */
+  declare module '*.yaml' {
+    const content: any
+    export default content
+  }
   /* 菜单 */
   declare namespace Menu {
     /** RouteVO，路由对象 */
@@ -217,5 +221,4 @@ declare global {
     }
   }
 }
-
 export {}

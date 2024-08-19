@@ -3,10 +3,9 @@
  * @Author: zhongzd
  * @Date: 2024-07-09 19:06:11
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 17:30:50
- * @FilePath: \zzd\vue3-PC_temp\src\main.ts
+ * @LastEditTime: 2024-08-17 23:23:41
+ * @FilePath: \vue3-PC_temp\src\main.ts
  */
-import './assets/main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -18,6 +17,8 @@ import router from '@/router'
 import { store } from '@/store'
 // element icons
 import * as Icons from '@element-plus/icons-vue'
+// 样式
+import '@/styles/index.scss'
 
 const app = createApp(App)
 

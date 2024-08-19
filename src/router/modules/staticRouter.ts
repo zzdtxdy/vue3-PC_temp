@@ -111,7 +111,7 @@ export const errorRouter = [
   {
     path: '/401',
     name: '401',
-    component: () => import('@/views/error-page/401.vue'),
+    component: () => import('@/views/error/401.vue'),
     meta: {
       title: '401页面',
       hidden: true
@@ -120,7 +120,7 @@ export const errorRouter = [
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/error-page/404.vue'),
+    component: () => import('@/views/error/404.vue'),
     meta: {
       title: '404页面',
       hidden: true

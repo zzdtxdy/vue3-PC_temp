@@ -1,6 +1,6 @@
-import request from "@/utils/request";
+import request from '@/utils/request'
 
-const DICT_BASE_URL = "/api/v1/dict";
+const DICT_BASE_URL = '/api/v1/dict'
 
 class DictAPI {
   /**
@@ -12,9 +12,9 @@ class DictAPI {
   static getPage(queryParams: DictPageQuery) {
     return request<any, PageResult<DictPageVO[]>>({
       url: `${DICT_BASE_URL}/page`,
-      method: "get",
-      params: queryParams,
-    });
+      method: 'get',
+      params: queryParams
+    })
   }
 
   /**
@@ -26,8 +26,8 @@ class DictAPI {
   static getFormData(id: number) {
     return request<any, ResponseData<DictForm>>({
       url: `${DICT_BASE_URL}/${id}/form`,
-      method: "get",
-    });
+      method: 'get'
+    })
   }
 
   /**
@@ -39,9 +39,9 @@ class DictAPI {
   static add(data: DictForm) {
     return request({
       url: `${DICT_BASE_URL}`,
-      method: "post",
-      data: data,
-    });
+      method: 'post',
+      data: data
+    })
   }
 
   /**
@@ -54,9 +54,9 @@ class DictAPI {
   static update(id: number, data: DictForm) {
     return request({
       url: `${DICT_BASE_URL}/${id}`,
-      method: "put",
-      data: data,
-    });
+      method: 'put',
+      data: data
+    })
   }
 
   /**
@@ -68,8 +68,8 @@ class DictAPI {
   static deleteByIds(ids: string) {
     return request({
       url: `${DICT_BASE_URL}/${ids}`,
-      method: "delete",
-    });
+      method: 'delete'
+    })
   }
 
   /**
@@ -81,12 +81,12 @@ class DictAPI {
   static getOptions(code: string) {
     return request<any, OptionType[]>({
       url: `${DICT_BASE_URL}/${code}/options`,
-      method: "get",
-    });
+      method: 'get'
+    })
   }
 }
 
-export default DictAPI;
+export default DictAPI
 
 /**
  * 字典查询参数
@@ -95,7 +95,7 @@ export interface DictPageQuery extends PageQuery {
   /**
    * 关键字(字典名称/编码)
    */
-  keywords?: string;
+  keywords?: string
 }
 
 /**
@@ -105,23 +105,23 @@ export interface DictPageVO {
   /**
    * 字典ID
    */
-  id: number;
+  id: number
   /**
    * 字典名称
    */
-  name: string;
+  name: string
   /**
    * 字典编码
    */
-  code: string;
+  code: string
   /**
    * 字典状态（1-启用，0-禁用）
    */
-  status: number;
+  status: number
   /**
    * 字典项列表
    */
-  dictItems: DictItem[];
+  dictItems: DictItem[]
 }
 
 /**
@@ -131,23 +131,23 @@ export interface DictItem {
   /**
    * 字典项ID
    */
-  id?: number;
+  id?: number
   /**
    * 字典项名称
    */
-  name?: string;
+  name?: string
   /**
    * 字典项值
    */
-  value?: string;
+  value?: string
   /**
    * 排序
    */
-  sort?: number;
+  sort?: number
   /**
    * 状态（1-启用，0-禁用）
    */
-  status?: number;
+  status?: number
 }
 
 // TypeScript 类型声明
@@ -159,25 +159,25 @@ export interface DictForm {
   /**
    * 字典ID
    */
-  id?: number;
+  id?: number
   /**
    * 字典名称
    */
-  name?: string;
+  name?: string
   /**
    * 字典编码
    */
-  code?: string;
+  code?: string
   /**
    * 字典状态（1-启用，0-禁用）
    */
-  status?: number;
+  status?: number
   /**
    * 备注
    */
-  remark?: string;
+  remark?: string
   /**
    * 字典数据项列表
    */
-  dictItems?: DictItem[];
+  dictItems?: DictItem[]
 }

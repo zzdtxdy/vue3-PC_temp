@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description: 全局配置
  * @Author: zhongzd
  * @Date: 2024-08-16 13:34:31
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 17:57:37
- * @FilePath: \zzd\vue3-PC_temp\src\store\modules\global.ts
+ * @LastEditTime: 2024-08-17 10:45:25
+ * @FilePath: \vue3-PC_temp\src\store\modules\app.ts
  */
 import { defineStore } from 'pinia'
 import { GlobalState } from '@/store/interface'
@@ -13,9 +13,10 @@ import piniaPersistConfig from '@/store/persistConfig'
 // 导入 Element Plus 中英文语言包
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
+import { store } from '..'
 
-export const useGlobalStore = defineStore({
-  id: 'global',
+export const useAppStore = defineStore({
+  id: 'app',
   state: (): AppSettings => {
     const {
       device,
@@ -35,7 +36,7 @@ export const useGlobalStore = defineStore({
       breadcrumb, // 面包屑导航
       breadcrumbIcon, // 面包屑导航图标
       tabs, // 标签页
-      tabsIcon // 标签页图标
+      tabsIcon, // 标签页图标
       activeTopMenuPath // 顶部菜单激活路径
     } = defaultSettings
     // 返回状态对象，包含所有初始化的状态属性
@@ -75,3 +76,11 @@ export const useGlobalStore = defineStore({
   },
   persist: piniaPersistConfig('global')
 })
+/**
+ * 用于在组件外部（如在Pinia Store 中）使用 Pinia 提供的 store 实例。
+ * 官方文档解释了如何在组件外部使用 Pinia Store：
+ * https://pinia.vuejs.org/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
+ */
+export function useAppStoreHook() {
+  return useAppStore(store)
+}

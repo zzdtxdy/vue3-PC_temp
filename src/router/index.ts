@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-15 16:41:59
- * @FilePath: \zzd\vue3-PC_temp\src\router\index.ts
+ * @LastEditTime: 2024-08-16 20:25:36
+ * @FilePath: \项目\vue3-PC_temp\src\router\index.ts
  */
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { staticRouter } from '@/router/modules/staticRouter'
@@ -134,7 +134,7 @@ export const setMixLeftMenus = (topMenuPath: string) => {
   const allRoutes = router.getRoutes()
   const matchedItem = allRoutes.find((item) => item.path === topMenuPath)
   if (matchedItem && matchedItem.children) {
-    useAuthStore.mixLeftMenus = matchedItem.children
+    useAuthStore().mixLeftMenus = matchedItem.children
   }
 }
 export default router

@@ -1,4 +1,4 @@
-/* stylelint-disable property-no-unknown */
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
 :export {
   sidebar-width: $sidebar-width;
   navbar-height: $navbar-height;
@@ -8,4 +8,3 @@
   menu-active-text: $menu-active-text;
   menu-hover: $menu-hover;
 }
-/* stylelint-enable property-no-unknown */
