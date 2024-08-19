@@ -7,7 +7,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElCard: typeof import('element-plus/es')['ElCard']
+    ElCol: typeof import('element-plus/es')['ElCol']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
+    ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
+    ElRow: typeof import('element-plus/es')['ElRow']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElWatermark: typeof import('element-plus/es')['ElWatermark']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./../components/icons/IconCommunity.vue')['default']
@@ -15,6 +23,7 @@ declare module 'vue' {
     IconEcosystem: typeof import('./../components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./../components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./../components/icons/IconTooling.vue')['default']
+    IEpDownload: typeof import('~icons/ep/download')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheWelcome: typeof import('./../components/TheWelcome.vue')['default']

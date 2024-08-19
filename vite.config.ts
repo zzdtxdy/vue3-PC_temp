@@ -7,7 +7,8 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
-
+// 配置压缩
+import viteCompression from 'vite-plugin-compression'
 // 导入 Node.js 的 `path` 模块，用于处理和转换文件路径
 import path from 'path'
 // 定义一个名为 `resolve` 的函数，用于解析相对路径并返回绝对路径
@@ -82,6 +83,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       Icons({
         // 自动安装图标库
         autoInstall: true
+      }),
+      // gizp
+      viteCompression({
+        verbose: true, //是否在控制台输出压缩结果
+        disable: false, //开启压缩(不禁用)，默认即可
+        deleteOriginFile: true, //删除源文件
+        threshold: 10240, //压缩前最小文件大小
+        algorithm: 'gzip', //压缩算法
+        ext: '.gz' //文件类型
       })
     ],
     // 配置模块解析相关选项
@@ -125,9 +135,20 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       rollupOptions: {
         output: {
           // manualChunks: {
-          //   "vue-i18n": ["vue-i18n"],
+          //   vue: ['vue', 'vue-router', 'pinia', 'axios']
           // },
-          // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
+          /* 分包 */
+          manualChunks: (id) => {
+            // 这个ID，就是所有文件的绝对路径
+            if (id.includes('node_modules')) {
+              // 因为 node_modules 中的依赖通常是不会改变的
+              // 所以直接单独打包出去
+              // 这个return 的值就是打包的名称
+              return 'vendor'
+            }
+          },
+          /* 分类 */
+          // 用于从入口点(main.ts)创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
           entryFileNames: 'js/[name].[hash].js',
           // 用于命名代码拆分时创建的共享块的输出命名
           chunkFileNames: 'js/[name].[hash].js',
