@@ -7,8 +7,13 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+// 体积分析
+import { visualizer } from 'rollup-plugin-visualizer'
 // 配置压缩
 import viteCompression from 'vite-plugin-compression'
+// cdn
+import externalGlobals from 'rollup-plugin-external-globals'
+import { createHtmlPlugin } from 'vite-plugin-html'
 // 导入 Node.js 的 `path` 模块，用于处理和转换文件路径
 import path from 'path'
 // 定义一个名为 `resolve` 的函数，用于解析相对路径并返回绝对路径
@@ -24,12 +29,32 @@ const __APP_INFO__ = {
   pkg: { name, version, engines, dependencies, devDependencies },
   buildTimestamp: Date.now()
 }
-
+// externals cdn此处配置不打包
+const cdn = {
+  css: [
+    // 'https://cdn.jsdelivr.net/npm/element-plus@2.7.8/dist/index.min.css'
+  ],
+  js: [
+    // 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.min.js'
+    // 'https://cdn.jsdelivr.net/npm/element-plus@2.7.8/dist/index.full.min.js'
+    'https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js',
+    'https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js'
+  ]
+}
+//不打包依赖
+const externalGlobalsObj = {
+  // 'global variable name': 'module id'
+  echarts: 'echarts',
+  axios: 'axios'
+  // 'element-plus': 'ElementPlus'
+}
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+  const isProduction = mode === 'production'
   // 用于在 Vite 项目中加载环境变量
   const env = loadEnv(mode, process.cwd())
   return {
+    base: '/',
     server: {
       // 允许IP访问
       host: '0.0.0.0',
@@ -84,11 +109,33 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 自动安装图标库
         autoInstall: true
       }),
+      visualizer({
+        gzipSize: true, //从源代码中收集 gzip 大小并将其显示在图表中
+        brotliSize: true, //从源代码中收集 brotli 大小并将其显示在图表中
+        emitFile: true, //在打包完的dist，否则在项目目录下
+        filename: 'stats.html', //分析图生成的文件名
+        open: true //如果存在本地服务端口，将在打包后自动展示
+      }),
+      {
+        ...externalGlobals(externalGlobalsObj), //不打包依赖
+        enforce: 'post', //指定这个插件应该在所有其他插件之后执行
+        apply: 'build' //指定这个插件只在构建阶段应用，而不是在开发服务器阶段
+      },
+      // cdn插入html
+      createHtmlPlugin({
+        //指定哪些内容需要被注入到生成的HTML文件中
+        inject: {
+          data: {
+            cdnCss: isProduction ? cdn.css : [],
+            cdnJs: isProduction ? cdn.js : []
+          }
+        }
+      }),
       // gizp
       viteCompression({
         verbose: true, //是否在控制台输出压缩结果
         disable: false, //开启压缩(不禁用)，默认即可
-        deleteOriginFile: true, //删除源文件
+        deleteOriginFile: false, //删除源文件
         threshold: 10240, //压缩前最小文件大小
         algorithm: 'gzip', //压缩算法
         ext: '.gz' //文件类型
@@ -118,9 +165,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         }
       }
     },
+    // esbuild: {
+    //   legalComments: 'none', // 删除注释
+    //   drop: ['console', 'debugger'] // 删除 所有的console 和 debugger和注释
+    // },
     // 构建配置
     build: {
       chunkSizeWarningLimit: 2000, // 消除打包大小超过500kb警告
+      // 混淆器，terser 构建后文件体积更小，'terser' | 'esbuild' ,默认为esbuild
       minify: 'terser', // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
       terserOptions: {
         compress: {
@@ -166,7 +218,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             }
             return `${extType}/[name].[hash].[ext]`
           }
-        }
+        },
+        external: Object.keys(externalGlobalsObj)
       }
     },
     define: {
