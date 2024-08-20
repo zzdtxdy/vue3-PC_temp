@@ -37,15 +37,15 @@ const cdn = {
   js: [
     // 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.min.js'
     // 'https://cdn.jsdelivr.net/npm/element-plus@2.7.8/dist/index.full.min.js'
-    'https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js',
-    'https://cdn.jsdelivr.net/npm/axios@1.7.2/dist/axios.min.js'
+    'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js'
+    // 'https://cdn.bootcdn.net/ajax/libs/axios/1.7.2/axios.min.js'
   ]
 }
 //不打包依赖
 const externalGlobalsObj = {
   // 'global variable name': 'module id'
-  echarts: 'echarts',
-  axios: 'axios'
+  echarts: 'echarts'
+  // axios: 'axios'
   // 'element-plus': 'ElementPlus'
 }
 // https://vitejs.dev/config/
