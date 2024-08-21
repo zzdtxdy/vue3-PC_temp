@@ -3,14 +3,14 @@
  * @Author: zhongzd
  * @Date: 2024-08-15 14:27:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 15:53:59
- * @FilePath: \zzd\vue3-PC_temp\src\setting.ts
+ * @LastEditTime: 2024-08-21 17:41:35
+ * @FilePath: \vue3-PC_temp\src\settings.ts
  */
 import { SizeEnum } from './enums/SizeEnum'
 import { LayoutEnum } from './enums/LayoutEnum'
 import { ThemeEnum } from './enums/ThemeEnum'
-import { LanguageEnum } from './enums/LanguageEnum'
 import { DeviceEnum } from './enums/DeviceEnum'
+import { getBrowserLang } from './utils/i18n'
 
 // 首页地址（默认）
 export const HOME_URL: string = 'dashboard'
@@ -26,7 +26,7 @@ export const BAIDU_MAP_KEY: string = ''
 
 const { pkg } = __APP_INFO__
 
-// 媒体查询 返回一个 MediaQueryList 对象 检测当前主题色是黑色
+// 媒体查询 返回一个 MediaQueryList 对象 检测当前浏览器主题色是黑色
 const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 
 const defaultSettings: AppSettings = {
@@ -40,7 +40,7 @@ const defaultSettings: AppSettings = {
   layout: LayoutEnum.LEFT,
   theme: mediaQueryList.matches ? ThemeEnum.DARK : ThemeEnum.LIGHT,
   size: SizeEnum.DEFAULT,
-  language: LanguageEnum.ZH_CN,
+  language: getBrowserLang(),
   themeColor: '#409EFF',
   watermarkEnabled: false,
   watermarkContent: pkg.name,

@@ -7,7 +7,7 @@
  * @FilePath: \vue3-PC_temp\src\views\login\index.vue
 -->
 <template>
-  <div>1111</div>
+  <div>{{ $t('login.username') }}</div>
 </template>
 
 <script setup lang="ts"></script>
