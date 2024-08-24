@@ -7,6 +7,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // 体积分析
 import { visualizer } from 'rollup-plugin-visualizer'
 // 配置压缩
@@ -108,6 +109,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       Icons({
         // 自动安装图标库
         autoInstall: true
+      }),
+      createSvgIconsPlugin({
+        // 指定插件应该扫描的目录，从中查找 SVG 文件
+        iconDirs: [path.resolve(pathSrc, 'assets/icons')],
+        // 指定symbolId格式 src/icons/settings.svg 将生成 <symbol id="icon-settings">它在 icons 根目录下，没有子目录，所以 dir 部分为空
+        symbolId: 'icon-[dir]-[name]'
       }),
       visualizer({
         gzipSize: true, //从源代码中收集 gzip 大小并将其显示在图表中

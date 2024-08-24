@@ -1,20 +1,35 @@
-// translate router.meta.title, be used in breadcrumb sidebar tagsview
 import i18n from '@/lang/index'
 
 /**
- * @description: 翻译路由的 meta.title，如果没有对应的翻译，它将返回原始的 title。
- * @param {any} title
- * @return {*}
- * @author: zhongzd
+ * @description: 翻译路由的 meta.title，如果没有对应的翻译，将返回原始的 title。
+ * @param {string} title - 路由的 meta.title
+ * @return {string} 翻译后的标题或原始标题
  */
-export function translateRouteTitle(title: any) {
-  // 判断是否存在国际化配置，如果没有原生返回
-  // te 检查是否存在以 "route." + title 为键的翻译
-  const hasKey = i18n.global.te('route.' + title)
-  if (hasKey) {
-    // i18n.global.t 获取翻译后的文本
-    const translatedTitle = i18n.global.t('route.' + title)
-    return translatedTitle
+export function translateRouteTitle(title: string): string {
+  const translationKey = `route.${title}`
+  const _t: any = i18n.global
+
+  // 如果存在对应的国际化配置，返回翻译后的标题
+  if (_t.te(translationKey)) {
+    return _t.t(translationKey)
   }
+
+  // 否则返回原始的标题
   return title
+}
+
+/**
+ * @description 获取浏览器默认语言
+ * @returns {string} 浏览器默认语言代码
+ */
+export function getBrowserLang(): string {
+  const browserLang = navigator.language || ''
+  let defaultBrowserLang = ''
+  if (['cn', 'zh', 'zh-cn'].includes(browserLang.toLowerCase())) {
+    defaultBrowserLang = 'zh-cn'
+  } else {
+    // 其他语言默认返回 'en'
+    defaultBrowserLang = 'en'
+  }
+  return defaultBrowserLang
 }
