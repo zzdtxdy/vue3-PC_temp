@@ -26,7 +26,6 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
-    "postcss-pxtorem": "^6.1.0",
     "vue": "^3.4.21",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.0"
@@ -54,6 +53,7 @@
     "npm-run-all2": "^6.1.2",
     "postcss": "^8.4.39",
     "postcss-html": "^1.7.0",
+    "postcss-px-to-viewport-8-plugin": "^1.2.5",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.2.5",
     "rollup-plugin-external-globals": "^0.12.0",

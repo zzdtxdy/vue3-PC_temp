@@ -8,6 +8,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import pxtovw from 'postcss-px-to-viewport-8-plugin'
 // 体积分析
 import { visualizer } from 'rollup-plugin-visualizer'
 // 配置压缩
@@ -49,6 +50,26 @@ const externalGlobalsObj = {
   // axios: 'axios'
   // 'element-plus': 'ElementPlus'
 }
+/* px to vw */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const loder_pxtovw = pxtovw({
+  //这里是设计稿宽度 自己修改
+  unitToConvert: 'px', // 需要转换的单位，默认为"px"
+  viewportWidth: 1920, // 设计稿的视口宽度
+  unitPrecision: 5, // 单位转换后保留的精度
+  propList: ['*'], // 能转化为vw的属性列表
+  viewportUnit: 'vw', // 希望使用的视口单位
+  fontViewportUnit: 'vw', // 字体使用的视口单位
+  selectorBlackList: [], // 需要忽略的CSS选择器，不会转为视口单位，使用原有的px等单位。
+  minPixelValue: 1, // 设置最小的转换数值，如果为1的话，只有大于1的值会被转换
+  mediaQuery: false, // 是否转换媒体查询中设置的属性值
+  replace: true, //  则原始的px单位将被vw单位替换，而不是在CSS中同时保留两者
+  exclude: undefined, // 忽略某些文件夹下的文件或特定文件，例如 'node_modules' 下的文件
+  include: undefined, // 如果设置了include，那将只有匹配到的文件才会被转换
+  landscape: false, // 是否添加根据 landscapeWidth 生成的媒体查询条件 @media (orientation: landscape)
+  landscapeUnit: 'vw', // 横屏时使用的单位
+  landscapeWidth: 1920 // 横屏时使用的视口宽度
+})
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const isProduction = mode === 'production'
@@ -110,12 +131,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 自动安装图标库
         autoInstall: true
       }),
+      // 支持svg
       createSvgIconsPlugin({
         // 指定插件应该扫描的目录，从中查找 SVG 文件
         iconDirs: [path.resolve(pathSrc, 'assets/icons')],
         // 指定symbolId格式 src/icons/settings.svg 将生成 <symbol id="icon-settings">它在 icons 根目录下，没有子目录，所以 dir 部分为空
         symbolId: 'icon-[dir]-[name]'
       }),
+      // 打包体积预览
       visualizer({
         gzipSize: true, //从源代码中收集 gzip 大小并将其显示在图表中
         brotliSize: true, //从源代码中收集 brotli 大小并将其显示在图表中
@@ -123,6 +146,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         filename: 'stats.html', //分析图生成的文件名
         open: true //如果存在本地服务端口，将在打包后自动展示
       }),
+      // cdn 排除打包
       {
         ...externalGlobals(externalGlobalsObj), //不打包依赖
         enforce: 'post', //指定这个插件应该在所有其他插件之后执行
@@ -168,8 +192,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 在每个 SCSS 文件自动引入 @/styles/var.scss 文件，并将其中的所有变量、mixin 等作为全局可用的
           additionalData: `
           @use "@/styles/var.scss" as *;
+          @import "@/styles/utils.scss";
         `
         }
+      },
+      postcss: {
+        plugins: [
+          // px to vw
+          // loder_pxtovw
+        ]
       }
     },
     // esbuild: {
