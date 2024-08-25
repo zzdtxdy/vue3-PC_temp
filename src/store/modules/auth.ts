@@ -7,7 +7,7 @@
  * @FilePath: \zzd\vue3-PC_temp\src\store\modules\auth copy.ts
  */
 import { defineStore } from 'pinia'
-import { store } from '@/store'
+import store from '@/store'
 import MenuAPI from '@/api/menu'
 import { AuthState } from '@/store/interface'
 import { getFlatMenuList, getShowMenuList } from '@/utils'

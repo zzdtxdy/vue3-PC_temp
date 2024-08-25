@@ -160,14 +160,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       }
     },
     css: {
-      // CSS 预处理器
+      // CSS 预处理器 这个配置项允许你定义 CSS 预处理器（如 SCSS、Sass、Less 等）的特定选项
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
-          javascriptEnabled: true,
-          // 你可以在项目的任何地方（包括组件的<style>标签中）直接使用variables.scss中定义的变量，而无需在每个组件中单独引入该文件。
+          javascriptEnabled: true, // 否允许在 SCSS 文件中使用 JavaScript 表达式
+          // 在每个 SCSS 文件自动引入 @/styles/var.scss 文件，并将其中的所有变量、mixin 等作为全局可用的
           additionalData: `
-          @use "@/styles/variables.scss" as *;
+          @use "@/styles/var.scss" as *;
         `
         }
       }

@@ -3,17 +3,18 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 13:55:48
- * @FilePath: \zzd\vue3-PC_temp\src\store\modules\user.ts
+ * @LastEditTime: 2024-08-24 18:21:34
+ * @FilePath: \vue3-PC_temp\src\store\modules\user.ts
  */
 import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
 import { resetRouter } from '@/router'
-import { store, useAuthStore } from '@/store'
+import store from '@/store'
 
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 import { defineStore } from 'pinia'
 import { clearToken } from '@/utils'
+import { useAuthStore } from '@/store/modules/auth'
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({
     roles: [], // 角色

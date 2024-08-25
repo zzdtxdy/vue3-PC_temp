@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Author: zhongzd
+ * @Date: 2024-07-07 16:17:50
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-08-24 17:37:41
+ * @FilePath: \vue3-PC_temp\src\App.vue
+-->
 <template>
   <el-config-provider :locale="locale" :size="size">
     <!-- 开启水印 -->
@@ -16,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '@/store'
+import { useAppStore } from '@/store/modules/app'
 import defaultSettings from '@/settings'
 import { ThemeEnum } from '@/enums/ThemeEnum'
 import { SizeEnum } from '@/enums/SizeEnum'

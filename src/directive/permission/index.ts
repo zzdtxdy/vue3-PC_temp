@@ -3,10 +3,10 @@
  * @Author: zhongzd
  * @Date: 2024-08-04 11:43:07
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-15 17:08:36
- * @FilePath: \zzd\vue3-PC_temp\src\directive\permission\index.ts
+ * @LastEditTime: 2024-08-24 17:50:21
+ * @FilePath: \vue3-PC_temp\src\directive\permission\index.ts
  */
-import { useAuthStoreHook } from '@/store'
+import { useAuthStoreHook } from '@/store/modules/auth'
 import { Directive, DirectiveBinding } from 'vue'
 
 /**

@@ -9,7 +9,8 @@
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { staticRouter } from '@/router/modules/staticRouter'
 export const Layout = () => import('@/layout/index.vue')
-import { useAuthStore, useUserStore } from '@/store'
+import { useAuthStore } from '@/store/modules/auth'
+import { useUserStore } from '@/store/modules/user'
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 import NProgress from '@/utils/nprogress'
 import { WHITE_LIST } from '@/settings'

@@ -1,30 +1,33 @@
 /*
- * @Description: 国际化配置
+ * @Description:
  * @Author: zhongzd
  * @Date: 2024-08-16 20:34:34
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-21 13:51:30
- * @FilePath: \zzd\vue3-PC_temp\src\lang\index.ts
+ * @LastEditTime: 2024-08-24 20:27:07
+ * @FilePath: \vue3-PC_temp\src\lang\index.ts
  */
+import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { useAppStoreHook } from '@/store/modules/app'
-import yaml from 'js-yaml'
 // 本地语言包
-import enLocale from './modules/en.yaml'
-import zhCnLocale from './modules/zh.yaml'
+import enLocale from './modules/en.json'
+import zhCnLocale from './modules/zh.json'
 
 const appStore = useAppStoreHook()
 
-const messages = {
-  'zh-cn': yaml.load(zhCnLocale) as any,
-  en: yaml.load(enLocale) as any
-}
-
 const i18n = createI18n({
-  legacy: false, // 是否使用Vue 2的兼容模式
-  locale: appStore.language, // 当前语言
-  messages,
-  globalInjection: true // 将I18n实例自动注入到根Vue实例和所有子组件中 不用手动导入useI18n 直接使用$t方法来获取翻译文本
+  legacy: false,
+  locale: appStore.language,
+  messages: {
+    'zh-cn': zhCnLocale,
+    en: enLocale
+  },
+  globalInjection: true
 })
+
+// 全局注册 i18n
+export function setupI18n(app: App<Element>) {
+  app.use(i18n)
+}
 
 export default i18n

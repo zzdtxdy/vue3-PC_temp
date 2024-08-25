@@ -17,19 +17,3 @@ export function translateRouteTitle(title: string): string {
   // 否则返回原始的标题
   return title
 }
-
-/**
- * @description 获取浏览器默认语言
- * @returns {string} 浏览器默认语言代码
- */
-export function getBrowserLang(): string {
-  const browserLang = navigator.language || ''
-  let defaultBrowserLang = ''
-  if (['cn', 'zh', 'zh-cn'].includes(browserLang.toLowerCase())) {
-    defaultBrowserLang = 'zh-cn'
-  } else {
-    // 其他语言默认返回 'en'
-    defaultBrowserLang = 'en'
-  }
-  return defaultBrowserLang
-}

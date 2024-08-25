@@ -3,14 +3,14 @@
  * @Author: zhongzd
  * @Date: 2024-08-15 14:27:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-21 17:41:35
+ * @LastEditTime: 2024-08-24 20:15:22
  * @FilePath: \vue3-PC_temp\src\settings.ts
  */
 import { SizeEnum } from './enums/SizeEnum'
 import { LayoutEnum } from './enums/LayoutEnum'
 import { ThemeEnum } from './enums/ThemeEnum'
 import { DeviceEnum } from './enums/DeviceEnum'
-import { getBrowserLang } from './utils/i18n'
+import { getBrowserLang } from './utils'
 
 // 首页地址（默认）
 export const HOME_URL: string = 'dashboard'

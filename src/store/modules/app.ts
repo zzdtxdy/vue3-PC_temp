@@ -3,17 +3,16 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 13:34:31
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-17 10:45:25
+ * @LastEditTime: 2024-08-24 17:43:21
  * @FilePath: \vue3-PC_temp\src\store\modules\app.ts
  */
 import { defineStore } from 'pinia'
-import { GlobalState } from '@/store/interface'
 import defaultSettings from '@/settings'
 import piniaPersistConfig from '@/store/persistConfig'
 // 导入 Element Plus 中英文语言包
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
-import { store } from '..'
+import store from '@/store'
 
 export const useAppStore = defineStore({
   id: 'app',
@@ -70,7 +69,7 @@ export const useAppStore = defineStore({
   },
   actions: {
     // Set GlobalState
-    setGlobalState<K extends keyof GlobalState>(key: K, value: GlobalState[K]) {
+    setGlobalState<K extends keyof AppSettings>(key: K, value: AppSettings[K]) {
       this.$patch({ [key]: value })
     }
   },
