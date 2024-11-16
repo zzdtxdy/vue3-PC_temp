@@ -3,13 +3,14 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-15 15:52:36
- * @FilePath: \zzd\vue3-PC_temp\src\utils\request.ts
+ * @LastEditTime: 2024-08-31 21:42:52
+ * @FilePath: \vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStoreHook } from '@/store/modules/user'
 import { ResultEnum } from '@/enums/ResultEnum'
 import { TOKEN_KEY } from '@/enums/CacheEnum'
+// import { checkStatus } from './checkStatus'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -50,8 +51,14 @@ service.interceptors.response.use(
   },
   (error: any) => {
     // 异常处理
-    if (error.response.data) {
-      const { code, msg } = error.response.data
+    // 请求超时 && 网络错误单独判断，没有 response
+    if (error.message.indexOf('timeout') !== -1) ElMessage.error('请求超时！请您稍后重试')
+    if (error.message.indexOf('Network Error') !== -1) ElMessage.error('网络错误！请您稍后重试')
+    const { response } = error
+    // 根据服务器响应的错误状态码，做不同的处理
+    // if (response) checkStatus(response.status)
+    if (response.data) {
+      const { code, msg } = response.data
       if (code === ResultEnum.TOKEN_INVALID) {
         ElNotification({
           title: '提示',

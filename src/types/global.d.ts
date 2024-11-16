@@ -74,8 +74,8 @@ declare global {
     layout: string
     /** 主题颜色 */
     themeColor: string
-    /** 主题模式(dark|light) */
-    theme: string
+    /** 主题模式(是否暗黑) */
+    isDark: boolean
     /** 布局大小(default |large |small) */
     size: string
     /** 语言( zh-cn| en) */

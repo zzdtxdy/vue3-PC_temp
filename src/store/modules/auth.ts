@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 14:06:10
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 14:41:48
- * @FilePath: \zzd\vue3-PC_temp\src\store\modules\auth copy.ts
+ * @LastEditTime: 2024-09-22 18:37:18
+ * @FilePath: \vue3-PC_temp\src\store\modules\auth.ts
  */
 import { defineStore } from 'pinia'
 import store from '@/store'
@@ -28,10 +28,8 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     // 获取动态路由
-    getAuthMenuList() {
-      MenuAPI.getRoutes().then((data: Menu.RouteVO[]) => {
-        this.authMenuList = data
-      })
+    async getAuthMenuList() {
+      this.authMenuList = await MenuAPI.getRoutes()
     },
     /** 判断是否有权限 */
     hasAuth(value: string | string[], type: 'button' | 'role' = 'button') {

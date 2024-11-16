@@ -1,29 +1,34 @@
+/*
+ * @Description: 主题
+ * @Author: zhongzd
+ * @Date: 2024-08-25 19:52:03
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-10-01 18:22:15
+ * @FilePath: \vue3-PC_temp\src\hooks\useTheme.ts
+ */
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import defaultSettings from '@/settings'
-import { useAppStore } from '@/store/modules/app'
-import { ThemeEnum } from '@/enums/ThemeEnum'
+import { useGlobalStore } from '@/store/modules/global'
 import { modifyAlpha } from '@/utils'
 
 /**
  * @description 全局主题 hooks
  * */
 export const useTheme = () => {
-  const appStore = useAppStore()
-  const { theme } = storeToRefs(appStore)
+  const globalStore = useGlobalStore()
+  const { isDark } = storeToRefs(globalStore)
 
   /**
    * @description: 切换暗黑模式
    * @return {*}
    */
   const switchDark = () => {
-    if (theme.value === ThemeEnum.DARK) {
+    if (!isDark.value) {
       // 在文档根元素 html上添加dark类
       document.documentElement.classList.add('dark')
-      appStore.setGlobalState('theme', ThemeEnum.DARK)
     } else {
       document.documentElement.classList.remove('dark')
-      appStore.setGlobalState('theme', ThemeEnum.LIGHT)
     }
     // changePrimary(themeColor.value)
   }
@@ -33,7 +38,7 @@ export const useTheme = () => {
    * @param {string} newThemeColor
    * @return {*}
    */
-  const changePrimary = (newThemeColor: string | null) => {
+  const changePrimary = (newThemeColor: string) => {
     if (!newThemeColor) {
       newThemeColor = defaultSettings.themeColor
       ElMessage({ type: 'success', message: `主题颜色已重置` })
@@ -46,7 +51,7 @@ export const useTheme = () => {
     for (let i = 1; i < 10; i++) {
       rootStyle.setProperty(`--el-color-primary-light-${i}`, `${modifyAlpha(newThemeColor, 1 - i * 0.1)}`)
     }
-    appStore.setGlobalState('themeColor', newThemeColor)
+    globalStore.setGlobalState('themeColor', newThemeColor)
   }
 
   return {

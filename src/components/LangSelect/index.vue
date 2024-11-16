@@ -1,14 +1,22 @@
+<!--
+ * @Description: 
+ * @Author: zhongzd
+ * @Date: 2024-08-25 19:52:03
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-10-01 19:07:40
+ * @FilePath: \vue3-PC_temp\src\components\LangSelect\index.vue
+-->
 <template>
   <el-dropdown trigger="click" @command="handleLanguageChange">
     <div>
-      <svg-icon icon-class="language" :size="size" />
+      <svg-icon name="language" :size="size" />
     </div>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
           v-for="item in langOptions"
           :key="item.value"
-          :disabled="appStore.language === item.value"
+          :disabled="globalStore.language === item.value"
           :command="item.value"
         >
           {{ item.label }}
@@ -20,14 +28,14 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from '@/store/modules/app'
+import { useGlobalStore } from '@/store/modules/global'
 import { LanguageEnum } from '@/enums/LanguageEnum'
 import { LanguageType } from '@/store/interface'
-
-defineProps({
+const emit = defineEmits(['resetForm'])
+const { size } = defineProps({
   size: {
     type: String,
-    required: false
+    default: '20'
   }
 })
 
@@ -36,13 +44,21 @@ const langOptions = [
   { label: 'English', value: LanguageEnum.EN }
 ]
 
-const appStore = useAppStore()
+const globalStore = useGlobalStore()
 const { locale, t } = useI18n()
-
-function handleLanguageChange(lang: LanguageType) {
+// 在组件加载时自动设置语言
+onMounted(() => {
+  const currentLang = globalStore.language
+  handleLanguageChange(currentLang, false)
+})
+function handleLanguageChange(lang: LanguageType, showMessage = true) {
   locale.value = lang
-  appStore.setGlobalState('language', lang)
-
-  ElMessage.success(t('langSelect.message.success'))
+  globalStore.setGlobalState('language', lang)
+  if (showMessage) {
+    ElMessage.success(t('langSelect.message.success'))
+  }
+  setTimeout(() => {
+    emit('resetForm')
+  })
 }
 </script>

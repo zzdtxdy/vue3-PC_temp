@@ -11,6 +11,31 @@
   }
 }
 
+/* Font Sizes */
+$font-size-base: 16px;   // 基本字体大小
+$font-size-small: 14px;
+$font-size-large: 20px;
+
+/* Borders */
+$border-width: 1px;
+$border-style: solid;
+// $border-color: $gray-light;
+
+/* Border Radius */
+$border-radius-sm: 2px;
+$border-radius-md: 4px;
+$border-radius-lg: 8px;
+
+/* Spacing */
+$spacing-unit: 8px;    // 基本间距单位
+
+$spacing-xs: $spacing-unit * 0.5;  // 4px
+$spacing-sm: $spacing-unit;        // 8px
+$spacing-md: $spacing-unit * 2;    // 16px
+$spacing-lg: $spacing-unit * 3;    // 24px
+$spacing-xl: $spacing-unit * 4;    // 32px
+
+/* menu */
 $menu-background: var(--menu-background); // 菜单背景色
 $menu-text: var(--menu-text); // 菜单文字颜色
 $menu-active-text: var(--menu-active-text); // 菜单激活文字颜色

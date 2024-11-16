@@ -1,3 +1,11 @@
+/*
+ * @Description: 通用工具
+ * @Author: zhongzd
+ * @Date: 2024-08-16 20:10:27
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-10-01 18:00:55
+ * @FilePath: \vue3-PC_temp\src\utils\index.ts
+ */
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 /**
  * @description 使用递归扁平化菜单，方便添加动态路由
@@ -15,9 +23,11 @@ export function getFlatMenuList(menuList: Menu.RouteVO[]): Menu.RouteVO[] {
  * @returns {Array}
  * */
 export function getShowMenuList(menuList: Menu.RouteVO[]) {
-  const newMenuList: Menu.RouteVO[] = JSON.parse(JSON.stringify(menuList))
+  const newMenuList: Menu.RouteVO[] = structuredClone(menuList)
   return newMenuList.filter((item) => {
-    item.children?.length && (item.children = getShowMenuList(item.children))
+    if (item.children?.length) {
+      item.children = getShowMenuList(item.children)
+    }
     return !item.meta?.hidden
   })
 }
@@ -70,4 +80,113 @@ export function getBrowserLang(): string {
     defaultBrowserLang = 'en'
   }
   return defaultBrowserLang
+}
+
+/**
+ * @description 获取当前时间对应的提示语
+ * @returns {String}
+ */
+export function getTimeState() {
+  const timeNow = new Date()
+  const hours = timeNow.getHours()
+  if (hours >= 6 && hours <= 11) return `早上好 ⛅`
+  if (hours >= 11 && hours <= 13) return `中午好 🌞`
+  if (hours >= 13 && hours <= 18) return `下午好 🌞`
+  if (hours >= 18 && hours <= 24) return `晚上好 🌛`
+  if (hours >= 0 && hours <= 6) return `凌晨好 🌛`
+}
+
+/**
+ * @description: 是否为移动端
+ * @return {*} true 时 false 否
+ */
+export function isMobile() {
+  const userAgentInfo = navigator.userAgent
+  const mobileAgents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
+  const mobileFlag = mobileAgents.some((mobileAgent) => {
+    return userAgentInfo.indexOf(mobileAgent) > 0
+  })
+
+  return mobileFlag
+}
+
+/**
+ * @description 获取localStorage
+ * @param {String} key Storage名称
+ * @returns {String}
+ */
+export function localGet(key: string) {
+  const value = window.localStorage.getItem(key)
+  try {
+    return JSON.parse(window.localStorage.getItem(key) as string)
+  } catch (error) {
+    return value
+  }
+}
+
+/**
+ * @description 存储localStorage
+ * @param {String} key Storage名称
+ * @param {*} value Storage值
+ * @returns {void}
+ */
+export function localSet(key: string, value: any) {
+  window.localStorage.setItem(key, JSON.stringify(value))
+}
+
+/**
+ * @description 清除localStorage
+ * @param {String} key Storage名称
+ * @returns {void}
+ */
+export function localRemove(key: string) {
+  window.localStorage.removeItem(key)
+}
+
+/**
+ * @description 清除所有localStorage
+ * @returns {void}
+ */
+export function localClear() {
+  window.localStorage.clear()
+}
+
+/**
+ * @description 判断数据类型
+ * @param {*} val 需要判断类型的数据
+ * @returns {String}
+ */
+export function isType(val: any) {
+  if (val === null) return 'null'
+  if (typeof val !== 'object') return typeof val
+  else return Object.prototype.toString.call(val).slice(8, -1).toLocaleLowerCase()
+}
+
+/**
+ * @description: 判断两个对象是否相等
+ * @param {any} obj1
+ * @param {any} obj2
+ * @return {boolean}
+ */
+export function deepEqual(obj1: any, obj2: any): boolean {
+  if (obj1 === obj2) return true
+
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
+    return false
+  }
+
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
+
+  if (keys1.length !== keys2.length) {
+    return false
+  }
+
+  for (const key of keys1) {
+    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+      return false
+    }
+  }
+
+  return true
 }

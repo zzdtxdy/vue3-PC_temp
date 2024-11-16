@@ -9,6 +9,7 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import pxtovw from 'postcss-px-to-viewport-8-plugin'
+import UnoCSS from 'unocss/vite'
 // 体积分析
 import { visualizer } from 'rollup-plugin-visualizer'
 // 配置压缩
@@ -99,6 +100,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       vue(),
       // jsx、tsx语法支持
       vueJsx(),
+      UnoCSS(),
       AutoImport({
         // 需要导入的内容自动导入 Vue 相关函数，如：ref, reactive, toRef 等
         imports: ['vue', 'pinia', 'vue-router', 'vue-i18n'],

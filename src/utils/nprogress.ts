@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-08-04 12:10:25
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-04 12:12:33
- * @FilePath: \项目\vue3-PC_temp\src\config\nprogress.ts
+ * @LastEditTime: 2024-08-25 21:41:58
+ * @FilePath: \vue3-PC_temp\src\utils\nprogress.ts
  */
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

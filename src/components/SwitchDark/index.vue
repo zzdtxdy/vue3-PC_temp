@@ -3,17 +3,21 @@
  * @Author: zhongzd
  * @Date: 2024-08-24 16:51:23
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 17:42:10
+ * @LastEditTime: 2024-10-01 18:19:44
  * @FilePath: \vue3-PC_temp\src\components\SwitchDark\index.vue
 -->
 <template>
-  <el-switch v-model="appStore.theme" inline-prompt active-icon="Sunny" inactive-icon="Moon" @change="switchDark" />
+  <el-switch v-model="globalStore.isDark" inline-prompt active-icon="Sunny" inactive-icon="Moon" />
 </template>
 
 <script setup lang="ts" name="SwitchDark">
 import { useTheme } from '@/hooks/useTheme'
-import { useAppStore } from '@/store/modules/app'
-
+import { useGlobalStore } from '@/store/modules/global'
+const globalStore = useGlobalStore()
+// const isDark = computed(() => globalStore.isDark)
 const { switchDark } = useTheme()
-const appStore = useAppStore()
+watchEffect(switchDark)
+// onMounted(() => {
+//   switchDark()
+// })
 </script>

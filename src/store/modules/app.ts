@@ -3,10 +3,10 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 13:34:31
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 17:43:21
+ * @LastEditTime: 2024-10-01 17:16:33
  * @FilePath: \vue3-PC_temp\src\store\modules\app.ts
  */
-import { defineStore } from 'pinia'
+import { _DeepPartial, defineStore, StateTree } from 'pinia'
 import defaultSettings from '@/settings'
 import piniaPersistConfig from '@/store/persistConfig'
 // 导入 Element Plus 中英文语言包
@@ -14,8 +14,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
 import store from '@/store'
 
-export const useAppStore = defineStore({
-  id: 'app',
+export const useAppStore = defineStore('app', {
   state: (): AppSettings => {
     const {
       device,
@@ -24,7 +23,7 @@ export const useAppStore = defineStore({
       layout, // 布局模式：left-左侧模式(默认) top-顶部模式 mix-混合模式
       size, // Element UI 组件的默认大小
       language, // 当前系统语言
-      theme, // 主题模式（暗色或亮色）
+      isDark, // 主题模式（暗色或亮色）
       themeColor, // 主题颜色
       sidebarStatus, // 菜单栏状态 是否折叠菜单
       watermarkEnabled, // 页面水印启用状态
@@ -46,7 +45,7 @@ export const useAppStore = defineStore({
       layout,
       size,
       language,
-      theme,
+      isDark,
       themeColor,
       sidebarStatus,
       watermarkEnabled,
@@ -70,10 +69,15 @@ export const useAppStore = defineStore({
   actions: {
     // Set GlobalState
     setGlobalState<K extends keyof AppSettings>(key: K, value: AppSettings[K]) {
-      this.$patch({ [key]: value })
+      console.log(key, value)
+      this.$patch({ [key]: value } as _DeepPartial<StateTree>)
+      console.log('Updated state:', this.$state) // 打印更新后的状态
+    },
+    setGlobalStatePatch(state: Partial<AppSettings>) {
+      this.$patch(state as _DeepPartial<StateTree>)
     }
   },
-  persist: piniaPersistConfig('global')
+  persist: piniaPersistConfig('app')
 })
 /**
  * 用于在组件外部（如在Pinia Store 中）使用 Pinia 提供的 store 实例。

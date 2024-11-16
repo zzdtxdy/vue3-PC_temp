@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description: 
  * @Author: zhongzd
- * @Date: 2024-07-04 19:04:54
+ * @Date: 2024-07-06 21:04:59
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-07-29 17:25:45
- * @FilePath: \zzd\vue3-PC_temp\.eslintrc.cjs
+ * @LastEditTime: 2024-10-01 18:49:23
+ * @FilePath: \vue3-PC_temp\.eslintrc.cjs
  */
 module.exports = {
   // 设置 ESLint 的根目录
@@ -52,7 +52,11 @@ module.exports = {
     // 关闭 no-undef 规则
     'no-undef': 'off',
     '@typescript-eslint/no-explicit-any': 'off', // 关闭any类型的警告
-    'vue/multi-word-component-names': 0 // 不强制要求组件命名 解决：index.vue组件命名问题（组件名称不合规范）
+    'vue/multi-word-component-names': 0, // 不强制要求组件命名 解决：index.vue组件命名问题（组件名称不合规范）
+    "@typescript-eslint/no-unused-vars": 'warn',
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": "warn",
+    'vue/attribute-hyphenation': 'off',
   },
   // 全局变量
   globals: {
