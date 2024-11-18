@@ -47,6 +47,26 @@ export const staticRouter: RouteRecordRaw[] = [
           affix: true,
           keepAlive: true
         }
+      },
+      {
+        path: '/stock',
+        name: 'Stock',
+        component: Layout,
+        meta: {
+          title: '股票管理',
+          icon: 'stock' // 你需要确保有这个图标，或者换成你有的图标名
+        },
+        children: [
+          {
+            path: 'detail',
+            name: 'StockDetail',
+            component: () => import('@/views/stock/detail/index.vue'),
+            meta: {
+              title: '股票详情',
+              keepAlive: true
+            }
+          }
+        ]
       }
     ]
   }

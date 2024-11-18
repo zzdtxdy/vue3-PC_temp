@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Author: zhongzd
+ * @Date: 2024-11-18 11:18:10
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2024-11-18 14:26:05
+ * @FilePath: \vue3-PC_temp\vite.config.ts
+ */
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'

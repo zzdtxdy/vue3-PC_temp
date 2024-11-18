@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 20:25:36
- * @FilePath: \项目\vue3-PC_temp\src\router\index.ts
+ * @LastEditTime: 2024-11-18 11:24:40
+ * @FilePath: \vue3-PC_temp\src\router\index.ts
  */
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { staticRouter } from '@/router/modules/staticRouter'
@@ -26,67 +26,67 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
 
-/**
- * @description 路由拦截 beforeEach
- * */
-router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore()
-  const authStore = useAuthStore()
+// /**
+//  * @description 路由拦截 beforeEach
+//  * */
+// router.beforeEach(async (to, from, next) => {
+//   const userStore = useUserStore()
+//   const authStore = useAuthStore()
 
-  NProgress.start()
-  // 已登录
-  if (localStorage.getItem(TOKEN_KEY)) {
-    if (to.path === '/login') {
-      // 如果已登录，跳转到首页
-      next({ path: '/' })
-    } else {
-      const hasRoles = authStore.roles && authStore.roles.length > 0
-      // 没有任何角色权限 重新请求
-      if (!hasRoles) {
-        try {
-          await userStore.getUserInfo()
-        } catch (error) {
-          // 清空路由 && token
-          await userStore.resetTokenRouter()
-          // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-          redirectToLogin(to, next)
-        }
-      }
-      // 如果没有菜单列表，就重新请求菜单列表并添加动态路由
-      if (!authStore.authMenuList.length) {
-        try {
-          await initDynamicRouter()
-        } catch (error) {
-          // 清空路由 && token
-          await userStore.resetTokenRouter()
-          // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-          redirectToLogin(to, next)
-        }
-      }
-      // 如果未匹配到任何路由 用于描述匹配到的路由记录数组
-      if (to.matched.length === 0) {
-        // 跳回之前的页面 否则转到404页面
-        return next(from.name ? { name: from.name } : '/404')
-      } else {
-        // 动态设置标题
-        const title = import.meta.env.VITE_GLOB_APP_TITLE
-        document.title = to.meta.title ? `${to.meta.title} - ${title}` : title
+//   NProgress.start()
+//   // 已登录
+//   if (localStorage.getItem(TOKEN_KEY)) {
+//     if (to.path === '/login') {
+//       // 如果已登录，跳转到首页
+//       next({ path: '/' })
+//     } else {
+//       const hasRoles = authStore.roles && authStore.roles.length > 0
+//       // 没有任何角色权限 重新请求
+//       if (!hasRoles) {
+//         try {
+//           await userStore.getUserInfo()
+//         } catch (error) {
+//           // 清空路由 && token
+//           await userStore.resetTokenRouter()
+//           // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
+//           redirectToLogin(to, next)
+//         }
+//       }
+//       // 如果没有菜单列表，就重新请求菜单列表并添加动态路由
+//       if (!authStore.authMenuList.length) {
+//         try {
+//           await initDynamicRouter()
+//         } catch (error) {
+//           // 清空路由 && token
+//           await userStore.resetTokenRouter()
+//           // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
+//           redirectToLogin(to, next)
+//         }
+//       }
+//       // 如果未匹配到任何路由 用于描述匹配到的路由记录数组
+//       if (to.matched.length === 0) {
+//         // 跳回之前的页面 否则转到404页面
+//         return next(from.name ? { name: from.name } : '/404')
+//       } else {
+//         // 动态设置标题
+//         const title = import.meta.env.VITE_GLOB_APP_TITLE
+//         document.title = to.meta.title ? `${to.meta.title} - ${title}` : title
 
-        next()
-      }
-    }
-  } else {
-    // 未登录
-    if (WHITE_LIST.includes(to.path)) {
-      next() // 在白名单，直接进入
-    } else {
-      // 清空路由 && token
-      await userStore.resetTokenRouter()
-      // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-      redirectToLogin(to, next)
-    }
-  }
-})
+//         next()
+//       }
+//     }
+//   } else {
+//     // 未登录
+//     if (WHITE_LIST.includes(to.path)) {
+//       next() // 在白名单，直接进入
+//     } else {
+//       // 清空路由 && token
+//       await userStore.resetTokenRouter()
+//       // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
+//       redirectToLogin(to, next)
+//     }
+//   }
+// })
 
 /**
  * @description 路由跳转结束

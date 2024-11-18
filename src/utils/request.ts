@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-31 21:42:52
+ * @LastEditTime: 2024-11-18 14:53:37
  * @FilePath: \vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
@@ -41,9 +41,9 @@ service.interceptors.response.use(
       return response
     }
 
-    const { code, data, msg } = response.data
-    if (code === ResultEnum.SUCCESS) {
-      return data
+    const { status, data, msg } = response.data
+    if (status == ResultEnum.SUCCESS) {
+      return response.data
     }
 
     ElMessage.error(msg || '系统出错')
@@ -58,8 +58,8 @@ service.interceptors.response.use(
     // 根据服务器响应的错误状态码，做不同的处理
     // if (response) checkStatus(response.status)
     if (response.data) {
-      const { code, msg } = response.data
-      if (code === ResultEnum.TOKEN_INVALID) {
+      const { status, msg } = response.data
+      if (status == ResultEnum.TOKEN_INVALID) {
         ElNotification({
           title: '提示',
           message: '您的会话已过期，请重新登录',
