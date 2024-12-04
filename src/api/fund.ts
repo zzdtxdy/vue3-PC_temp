@@ -8,20 +8,20 @@
  */
 import request from '@/utils/request'
 
-const BASE_URL = '/api/stock/v1'
+const BASE_URL = '/api/fund/v1'
 
-class StockAPI {
+class fundAPI {
   /** 股票列表*/
   static getList() {
     return request({
-      url: `${BASE_URL}/stockList`,
+      url: `${BASE_URL}/fundList`,
       method: 'get'
     })
   }
   /** 获取日k图*/
   static dayLine(code: string) {
     return request({
-      url: `${BASE_URL}/dayLine/thsCode/${code}`,
+      url: `${BASE_URL}/dayLine/fundCode/${code}`,
       method: 'get'
     })
   }
@@ -34,4 +34,4 @@ class StockAPI {
   }
 }
 
-export default StockAPI
+export default fundAPI

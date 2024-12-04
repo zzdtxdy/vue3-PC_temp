@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const AUTH_BASE_URL = '/api/v1/auth'
+const AUTH_BASE_URL = '/api/user/v1'
 
 class AuthAPI {
   /** 登录 接口*/
@@ -8,14 +8,14 @@ class AuthAPI {
     const formData = new FormData()
     formData.append('username', data.username)
     formData.append('password', data.password)
-    formData.append('captchaKey', data.captchaKey)
-    formData.append('captchaCode', data.captchaCode)
+    // formData.append('captchaKey', data.captchaKey)
+    // formData.append('captchaCode', data.captchaCode)
     return request<any, LoginResult>({
-      url: `${AUTH_BASE_URL}/login`,
+      url: `${AUTH_BASE_URL}/login/`,
       method: 'post',
       data: formData,
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
   }
@@ -46,9 +46,9 @@ export interface LoginData {
   /** 密码 */
   password: string
   /** 验证码缓存key */
-  captchaKey: string
+  captchaKey?: string
   /** 验证码 */
-  captchaCode: string
+  captchaCode?: string
 }
 
 /** 登录响应 */

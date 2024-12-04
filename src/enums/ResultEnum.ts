@@ -9,10 +9,10 @@ export const enum ResultEnum {
   /**
    * 错误
    */
-  ERROR = 'B0001',
+  ERROR = '500',
 
   /**
    * 令牌无效或过期
    */
-  TOKEN_INVALID = 'A0230'
+  TOKEN_INVALID = '401'
 }

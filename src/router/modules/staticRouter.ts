@@ -5,17 +5,17 @@ export const Layout = () => import('@/layout/index.vue')
 
 // 静态路由
 export const staticRouter: RouteRecordRaw[] = [
-  {
-    path: '/redirect',
-    component: Layout,
-    meta: { hidden: true },
-    children: [
-      {
-        path: '/redirect/:path(.*)', // 匹配 /redirect 后面跟随的任何路径
-        component: () => import('@/views/redirect/index.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/redirect',
+  //   component: Layout,
+  //   meta: { hidden: true },
+  //   children: [
+  //     {
+  //       path: '/redirect/:path(.*)', // 匹配 /redirect 后面跟随的任何路径
+  //       component: () => import('@/views/redirect/index.vue')
+  //     }
+  //   ]
+  // },
 
   {
     path: '/login',
@@ -49,25 +49,52 @@ export const staticRouter: RouteRecordRaw[] = [
         }
       },
       {
-        path: '/stock',
-        name: 'Stock',
-        component: Layout,
+        path: 'detail',
+        name: 'detail',
+        component: () => import('@/views/stock/detail/index.vue'),
         meta: {
-          title: '股票管理',
-          icon: 'stock' // 你需要确保有这个图标，或者换成你有的图标名
-        },
-        children: [
-          {
-            path: 'detail',
-            name: 'StockDetail',
-            component: () => import('@/views/stock/detail/index.vue'),
-            meta: {
-              title: '股票详情',
-              keepAlive: true
-            }
-          }
-        ]
+          title: '详情',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/stock/order/index.vue'),
+        meta: {
+          title: '委托单',
+          keepAlive: true
+        }
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/profile/index.vue'),
+        meta: {
+          title: '个人信息',
+          keepAlive: true
+        }
       }
+      // {
+      //   path: '/stock',
+      //   name: 'Stock',
+      //   component: Layout,
+      //   meta: {
+      //     title: '股票管理',
+      //     icon: 'stock' // 你需要确保有这个图标，或者换成你有的图标名
+      //   },
+      //   children: [
+      //     {
+      //       path: 'detail',
+      //       name: 'StockDetail',
+      //       component: () => import('@/views/stock/detail/index.vue'),
+      //       meta: {
+      //         title: '股票详情',
+      //         keepAlive: true
+      //       }
+      //     }
+      //   ]
+      // }
     ]
   }
 

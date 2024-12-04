@@ -3,17 +3,54 @@
     <!-- K线图区域 -->
     <div class="k-line-container">
       <div ref="kLineChart" class="k-line-chart"></div>
+      <!-- 买入按钮 -->
+      <el-button type="primary" @click="showBuyDialog">买入</el-button>
+      <el-button type="danger" @click="showSellDialog">卖出</el-button>
+      <!-- 买入对话框 -->
+      <el-dialog v-model="dialogVisible" title="买入委托" width="30%">
+        <el-form :model="form" label-width="100px">
+          <el-form-item label="委托价格">
+            <el-input v-model="form.price" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="交易量">
+            <el-input v-model="form.volume" type="number"></el-input>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="handleConfirm">确认</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <!-- 卖出对话框 -->
+      <el-dialog v-model="sellDialogVisible" title="卖出委托" width="30%">
+        <el-form :model="sellForm" label-width="150px">
+          <el-form-item label="委托价格">
+            <el-input v-model="sellForm.price" type="number"></el-input>
+          </el-form-item>
+          <el-form-item :label="`交易量(最大${maxSellAmount})`">
+            <el-input v-model="sellForm.volume" type="number"></el-input>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="sellDialogVisible = false">取消</el-button>
+            <el-button type="danger" @click="handleSellConfirm">确认</el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
 
     <!-- 基本信息区域 -->
     <div class="stock-info">
-      <el-descriptions title="股票基本信息" :column="2" border>
-        <el-descriptions-item label="股票代码">{{ stockInfo.code }}</el-descriptions-item>
-        <el-descriptions-item label="股票名称">{{ stockInfo.name }}</el-descriptions-item>
+      <el-descriptions :title="fetchMap[stockType].name + '基本信息'" :column="2" border>
+        <el-descriptions-item :label="fetchMap[stockType].name + '代码'">{{ stockInfo.code }}</el-descriptions-item>
+        <el-descriptions-item :label="fetchMap[stockType].name + '名称'">{{ stockInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="公司名称">{{ stockInfo.company }}</el-descriptions-item>
         <el-descriptions-item label="上市日期">{{ stockInfo.listingDateText }}</el-descriptions-item>
         <el-descriptions-item label="最新价">{{ stockInfo.currentPrice }}</el-descriptions-item>
-        <el-descriptions-item label="股票类型">{{ stockInfo.type }}</el-descriptions-item>
+        <el-descriptions-item :label="fetchMap[stockType].name + '类型'">{{ stockInfo.type }}</el-descriptions-item>
         <el-descriptions-item label="所属概念">{{ stockInfo.concept }}</el-descriptions-item>
         <!-- <el-descriptions-item label="涨跌幅">
           <span :class="stockInfo.changePercent >= 0 ? 'up' : 'down'">{{ stockInfo.changePercent }}%</span>
@@ -29,10 +66,55 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import StockAPI from '@/api/stock'
-const route = useRoute()
+import tradeAPI from '@/api/trade'
+import goldAPI from '@/api/gold'
+import fundAPI from '@/api/fund'
+import futuresAPI from '@/api/futures'
+import entrustAPI from '@/api/entrust'
+import router from '@/router'
+import { useStockStore } from '@/store/modules/stock'
 
+const route = useRoute()
+const userId = JSON.parse(localStorage.getItem('userInfo') || '{}').data?.id
+
+let curDate = ref<string | null>(null)
+// 对话框显示状态
+const dialogVisible = ref(false)
+const sellDialogVisible = ref(false)
+const fetchMap = {
+  stock: {
+    api: StockAPI,
+    name: '股票'
+  },
+  gold: {
+    api: goldAPI,
+    name: '黄金'
+  },
+  fund: {
+    api: fundAPI,
+    name: '期货'
+  },
+  future: {
+    api: futuresAPI,
+    name: '基金'
+  }
+}
+// 表单数据
+const form = reactive({
+  price: '',
+  volume: ''
+})
+const maxSellAmount = ref(0)
+// 卖出表单数据
+const sellForm = reactive({
+  price: '',
+  volume: ''
+})
 // 获取路由参数
 const stockCode = ref(route.query.code as string)
+type TabType = 'stock' | 'gold' | 'fund' | 'future'
+//
+const stockType = ref(route.query.type as TabType)
 // K线图DOM引用
 const kLineChart = ref<HTMLElement | null>(null)
 // echarts实例
@@ -63,6 +145,8 @@ let kLineData = [
   ['2024/01/02', 9.1, 9.5, 9.0, 9.3, 2500000]
   // ... 更多数据
 ]
+const stockStore = useStockStore()
+const klineDate = computed(() => stockStore.klineDate)
 
 const initKLineChart = () => {
   if (!kLineChart.value) return
@@ -165,12 +249,39 @@ const initKLineChart = () => {
   }
 
   chartInstance?.setOption(option)
+  // 添加点击事件监听
+  chartInstance?.on('click', (params) => {
+    if (params.seriesType === 'candlestick') {
+      const index = params.dataIndex // 当前点击项的索引
+      const data = kLineData[index] // 获取点击项的完整数据
+      console.log('点击项数据:', data)
+      // 提取需要的数据
+      const [date, open, high, low, close, volume, turnover, change, amount, changeRatio] = data
+      curDate.value = String(date)
+      if (curDate.value) {
+        // sessionStorage.setItem('KLineDate', curDate.value + '')
+        stockStore.setKlineDate(curDate.value + '')
+      }
+      console.log(`
+        日期：${date}
+        开盘价：${open}
+        最高价：${high}
+        最低价：${low}
+        收盘价：${close}
+        成交量：${volume}
+        换手率：${turnover}%
+        涨跌额：${change}
+        成交额：${amount}
+        涨跌幅：${changeRatio}%
+      `)
+    }
+  })
 }
 
 // 获取股票 日k
 const fetchDayLine = async () => {
   try {
-    const dayLine = await StockAPI.dayLine(stockCode.value)
+    const dayLine = await fetchMap[stockType.value].api.dayLine(stockCode.value)
     console.log(dayLine)
     kLineData = []
     dayLine.data.forEach((i: any) => {
@@ -188,6 +299,9 @@ const fetchDayLine = async () => {
       ])
     })
     console.log(1111, kLineData)
+    if (!klineDate.value || !kLineData.find((item) => item[0] == klineDate.value)) {
+      stockStore.setKlineDate(kLineData[0][0] + '')
+    }
   } catch (error) {
     console.error('获取股票日k失败:', error)
   }
@@ -197,19 +311,12 @@ const fetchBasicInfo = async () => {
   try {
     // 这里添加获取股票详情的API调用
     console.log('获取股票详情:', stockCode.value)
-    const basicInfo = await StockAPI.basicInfo(stockCode.value)
-    const {
-      type,
-      stockName: name,
-      thscode: code,
-      issuePriceText: currentPrice,
-      company,
-      concept,
-      listingDateText
-    } = basicInfo.data
+    const basicInfo = await fetchMap[stockType.value].api.basicInfo(stockCode.value)
+    const Name = [stockType.value] + 'Name'
+    const { type, [Name]: name, thscode: code, issuePriceText: currentPrice, company, concept, listingDateText } = basicInfo.data
     stockInfo.value = {
       name,
-      code,
+      code: stockCode.value,
       currentPrice,
       company,
       concept,
@@ -225,7 +332,98 @@ const fetchBasicInfo = async () => {
 const handleResize = () => {
   chartInstance?.resize()
 }
+// 显示买入对话框
+const showBuyDialog = () => {
+  if (!userId) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  dialogVisible.value = true
+}
+// 显示卖出对话框
+const showSellDialog = async () => {
+  if (!userId) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  if (!curDate.value && !klineDate.value) {
+    ElMessage.error('请选择日K')
+    return
+  }
+  try {
+    const res = await tradeAPI.selectMaxTradeSellAmount({
+      userId,
+      marketId: stockCode.value,
+      transTime: curDate.value || klineDate.value
+    })
+    maxSellAmount.value = res.data
+    if (maxSellAmount.value <= 0) {
+      ElMessage.warning('当前无可卖出数量')
+      return
+    }
+    sellDialogVisible.value = true
+  } catch (error) {
+    ElMessage.error('获取可卖数量失败')
+  }
+}
+// 确认买入
+const handleConfirm = async () => {
+  if (!curDate.value && !klineDate.value) {
+    ElMessage.error('请选择日K')
+    return
+  }
+  try {
+    // 调用买入接口
+    await entrustAPI.buyOrder({
+      entrustType: stockType.value,
+      transPrice: form.price,
+      transAmount: form.volume,
+      userId: userId,
+      marketId: stockCode.value,
+      transTime: curDate.value || klineDate.value
+    })
 
+    // 成功提示
+    ElMessage.success('买入成功')
+    // 关闭对话框
+    dialogVisible.value = false
+    // 重置表单
+    form.price = ''
+    form.volume = ''
+  } catch (error) {
+    ElMessage.error('买入失败')
+  }
+}
+// 确认卖出
+const handleSellConfirm = async () => {
+  if (!curDate.value && !klineDate.value) {
+    ElMessage.error('请选择日K')
+    return
+  }
+  if (Number(sellForm.volume) > maxSellAmount.value) {
+    ElMessage.error(`最大可卖数量为${maxSellAmount.value}`)
+    return
+  }
+  try {
+    await entrustAPI.sellOrder({
+      entrustType: stockType.value,
+      transPrice: sellForm.price,
+      transAmount: sellForm.volume,
+      userId: userId,
+      marketId: stockCode.value,
+      transTime: curDate.value || klineDate.value
+    })
+
+    ElMessage.success('卖出成功')
+    sellDialogVisible.value = false
+    sellForm.price = ''
+    sellForm.volume = ''
+  } catch (error) {
+    ElMessage.error('卖出失败')
+  }
+}
 onMounted(async () => {
   await fetchDayLine()
   fetchBasicInfo()

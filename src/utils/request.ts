@@ -10,6 +10,7 @@ import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStoreHook } from '@/store/modules/user'
 import { ResultEnum } from '@/enums/ResultEnum'
 import { TOKEN_KEY } from '@/enums/CacheEnum'
+import router from '@/router'
 // import { checkStatus } from './checkStatus'
 
 // 创建 axios 实例
@@ -41,13 +42,13 @@ service.interceptors.response.use(
       return response
     }
 
-    const { status, data, msg } = response.data
+    const { status, data, message } = response.data
     if (status == ResultEnum.SUCCESS) {
       return response.data
     }
 
-    ElMessage.error(msg || '系统出错')
-    return Promise.reject(new Error(msg || 'Error'))
+    ElMessage.error(message || '系统出错')
+    return Promise.reject(new Error(message || 'Error'))
   },
   (error: any) => {
     // 异常处理
@@ -57,21 +58,23 @@ service.interceptors.response.use(
     const { response } = error
     // 根据服务器响应的错误状态码，做不同的处理
     // if (response) checkStatus(response.status)
-    if (response.data) {
-      const { status, msg } = response.data
+    if (response) {
+      const { status, message } = response
       if (status == ResultEnum.TOKEN_INVALID) {
         ElNotification({
           title: '提示',
           message: '您的会话已过期，请重新登录',
           type: 'info'
         })
-        useUserStoreHook()
-          .resetTokenRouter()
-          .then(() => {
-            location.reload()
-          })
+        router.push('/login')
+        // useUserStoreHook()
+        //   .resetTokenRouter()
+        //   .then(() => {
+        //     // location.reload()
+
+        //   })
       } else {
-        ElMessage.error(msg || '系统出错')
+        ElMessage.error(message || '系统出错')
       }
     }
     return Promise.reject(error.message)

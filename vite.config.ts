@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-11-18 11:18:10
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-11-18 14:26:05
+ * @LastEditTime: 2024-11-28 14:33:36
  * @FilePath: \vue3-PC_temp\vite.config.ts
  */
 import { UserConfig, ConfigEnv, loadEnv, defineConfig } from 'vite'
@@ -48,14 +48,14 @@ const cdn = {
   js: [
     // 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.min.js'
     // 'https://cdn.jsdelivr.net/npm/element-plus@2.7.8/dist/index.full.min.js'
-    'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js'
+    // 'https://cdn.bootcdn.net/ajax/libs/echarts/5.5.0/echarts.min.js'
     // 'https://cdn.bootcdn.net/ajax/libs/axios/1.7.2/axios.min.js'
   ]
 }
 //不打包依赖
 const externalGlobalsObj = {
   // 'global variable name': 'module id'
-  echarts: 'echarts'
+  // echarts: 'echarts'
   // axios: 'axios'
   // 'element-plus': 'ElementPlus'
 }

@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 18:21:34
+ * @LastEditTime: 2024-11-28 15:38:50
  * @FilePath: \vue3-PC_temp\src\store\modules\user.ts
  */
 import AuthAPI, { LoginData } from '@/api/auth'
@@ -31,8 +31,9 @@ export const useUserStore = defineStore('user', () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(loginData)
         .then((data) => {
-          const { tokenType, accessToken } = data
-          localStorage.setItem(TOKEN_KEY, tokenType + ' ' + accessToken) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          // const { tokenType, accessToken } = data
+          // localStorage.setItem(TOKEN_KEY, tokenType + ' ' + accessToken) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          localStorage.setItem('userInfo', JSON.stringify(data)) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
           resolve()
         })
         .catch((error) => {

@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 19:05:19
+ * @LastEditTime: 2024-11-27 16:35:14
  * @FilePath: \vue3-PC_temp\src\views\login\index.vue
 -->
 <template>
@@ -14,7 +14,7 @@
       <langSelect class="ml-2 cursor-pointer" @reset-form="resetForm" />
     </div>
     <div class="login-form">
-      <div class="flex-x-end">1111</div>
+      <div class="flex-x-end"></div>
       <div class="i-mdi-alarm"></div>
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
         <el-form-item prop="username">
@@ -24,7 +24,7 @@
           <el-input v-model="loginForm.password" :prefix-icon="Lock" size="large" :placeholder="$t('login.password')" />
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item class="flex" prop="captchaCode">
+        <!-- <el-form-item class="flex" prop="captchaCode">
           <div class="input-wrapper">
             <el-input
               v-model="loginForm.captchaCode"
@@ -37,7 +37,7 @@
             />
             <el-image :src="captchaBase64" class="captcha-image" @click="getCaptcha" />
           </div>
-        </el-form-item>
+        </el-form-item> -->
         <!-- 登录按钮 -->
         <el-button :loading="loading" type="primary" size="large" class="w-full" @click.prevent="handleLoginSubmit">
           {{ $t('login.login') }}
@@ -65,13 +65,13 @@ const loginFormRef = ref<FormInstance>()
 // 验证码图片Base64字符串
 const captchaBase64 = ref()
 const loginForm = ref<LoginData>({
-  username: 'admin',
-  password: '123456',
-  captchaKey: '',
-  captchaCode: ''
+  username: 'landon1',
+  password: 'a1234567'
+  // captchaKey: '',
+  // captchaCode: ''
 })
 onMounted(() => {
-  getCaptcha()
+  // getCaptcha()
 })
 const loginRules = computed(() => {
   return {
@@ -93,14 +93,14 @@ const loginRules = computed(() => {
         message: t('login.message.password.min'),
         trigger: 'blur'
       }
-    ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: 'blur',
-        message: t('login.message.captchaCode.required')
-      }
     ]
+    // captchaCode: [
+    //   {
+    //     required: true,
+    //     trigger: 'blur',
+    //     message: t('login.message.captchaCode.required')
+    //   }
+    // ]
   }
 })
 /* 重置表单校验 */
@@ -135,7 +135,7 @@ const handleLoginSubmit = () => {
           router.push({ path: path, query: queryParams })
         })
         .catch(() => {
-          getCaptcha()
+          // getCaptcha()
         })
         .finally(() => {
           loading.value = false
