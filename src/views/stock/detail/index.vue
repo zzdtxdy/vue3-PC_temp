@@ -295,7 +295,7 @@ const fetchDayLine = async () => {
         Number(i.turnoverRatio), // 换手率
         Number(i.changeDay), // 涨跌额
         Number(i.amount), // 成交额
-        Number(i.changeRatioDay) // 涨跌幅
+        Number(i.changeRatio) // 涨跌幅
       ])
     })
     console.log(1111, kLineData)
