@@ -1,10 +1,10 @@
 /*
  * @Description:
  * @Author: zhongzd
- * @Date: 2024-08-05 09:18:21
+ * @Date: 2025-01-09 10:09:39
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-16 20:25:36
- * @FilePath: \项目\vue3-PC_temp\src\router\index.ts
+ * @LastEditTime: 2025-01-27 16:35:32
+ * @FilePath: \vue3-PC_temp\src\router\index.ts
  */
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { staticRouter } from '@/router/modules/staticRouter'
@@ -47,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
           await userStore.getUserInfo()
         } catch (error) {
           // 清空路由 && token
-          await userStore.resetTokenRouter()
+          await userStore.clearUserData()
           // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
           redirectToLogin(to, next)
         }
@@ -58,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
           await initDynamicRouter()
         } catch (error) {
           // 清空路由 && token
-          await userStore.resetTokenRouter()
+          await userStore.clearUserData()
           // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
           redirectToLogin(to, next)
         }
@@ -81,7 +81,7 @@ router.beforeEach(async (to, from, next) => {
       next() // 在白名单，直接进入
     } else {
       // 清空路由 && token
-      await userStore.resetTokenRouter()
+      await userStore.clearUserData()
       // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
       redirectToLogin(to, next)
     }

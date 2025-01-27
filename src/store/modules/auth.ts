@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 14:06:10
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-09-22 18:37:18
+ * @LastEditTime: 2025-01-27 16:30:22
  * @FilePath: \vue3-PC_temp\src\store\modules\auth.ts
  */
 import { defineStore } from 'pinia'
@@ -12,6 +12,7 @@ import MenuAPI from '@/api/menu'
 import { AuthState } from '@/store/interface'
 import { getFlatMenuList, getShowMenuList } from '@/utils'
 import { RouteRecordRaw } from 'vue-router'
+import { staticRouter } from '@/router/modules/staticRouter'
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
@@ -30,6 +31,7 @@ export const useAuthStore = defineStore('auth', {
     // 获取动态路由
     async getAuthMenuList() {
       this.authMenuList = await MenuAPI.getRoutes()
+      // this.authMenuList = staticRouter.concat(this.authMenuList)
     },
     /** 判断是否有权限 */
     hasAuth(value: string | string[], type: 'button' | 'role' = 'button') {

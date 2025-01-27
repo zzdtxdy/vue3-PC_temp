@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 19:05:19
+ * @LastEditTime: 2025-01-09 15:18:28
  * @FilePath: \vue3-PC_temp\src\views\login\index.vue
 -->
 <template>
@@ -14,15 +14,45 @@
       <langSelect class="ml-2 cursor-pointer" @reset-form="resetForm" />
     </div>
     <div class="login-form">
-      <div class="flex-x-end">1111</div>
-      <div class="i-mdi-alarm"></div>
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules">
+        <div class="form-title">
+          <h2>{{ defaultSettings.title }}</h2>
+          <el-dropdown style="position: absolute; right: 0">
+            <div class="cursor-pointer">
+              <el-icon>
+                <arrow-down />
+              </el-icon>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <el-tag>{{ defaultSettings.version }}</el-tag>
+                </el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('root', '123456')">超级管理员：root/123456</el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">系统管理员：admin/123456</el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('test', '123456')">测试小游客：test/123456</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" :prefix-icon="User" size="large" :placeholder="$t('login.username')" />
         </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="loginForm.password" :prefix-icon="Lock" size="large" :placeholder="$t('login.password')" />
-        </el-form-item>
+        <el-tooltip :visible="isCapslock" :content="$t('login.capsLock')" placement="right">
+          <el-form-item prop="password">
+            <el-input
+              v-model="loginForm.password"
+              :prefix-icon="Lock"
+              size="large"
+              :placeholder="$t('login.password')"
+              type="password"
+              name="password"
+              show-password
+              @keyup="checkCapslock"
+              @keyup.enter="handleLoginSubmit"
+            />
+          </el-form-item>
+        </el-tooltip>
         <!-- 验证码 -->
         <el-form-item class="flex" prop="captchaCode">
           <div class="input-wrapper">
@@ -42,6 +72,16 @@
         <el-button :loading="loading" type="primary" size="large" class="w-full" @click.prevent="handleLoginSubmit">
           {{ $t('login.login') }}
         </el-button>
+        <!-- 第三方登录 -->
+        <el-divider>
+          <el-text size="small">{{ $t('login.otherLoginMethods') }}</el-text>
+        </el-divider>
+        <div class="third-party-login">
+          <svg-icon name="wechat" class="icon" />
+          <svg-icon name="qq" class="icon" />
+          <svg-icon name="github" class="icon" />
+          <svg-icon name="gitee" class="icon" />
+        </div>
       </el-form>
     </div>
   </div>
@@ -54,6 +94,8 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 import router from '@/router'
 import { getTimeState } from '@/utils'
+import { LocationQuery } from 'vue-router'
+import defaultSettings from '@/settings'
 // pinia
 const userStore = useUserStore()
 // 国际化 Internationalization
@@ -143,12 +185,19 @@ const handleLoginSubmit = () => {
     }
   })
 }
-/** 解析 redirect 字符串 为 path 和  queryParams */
-const parseRedirect = () => {
-  const query = route.query
+/**
+ * 解析 redirect 字符串 为 path 和  queryParams
+ *
+ * @returns { path: string, queryParams: Record<string, string> } 解析后的 path 和 queryParams
+ */
+function parseRedirect(): {
+  path: string
+  queryParams: Record<string, string>
+} {
+  const query: LocationQuery = route.query
   const redirect = (query.redirect as string) ?? '/'
 
-  const url = new URL(redirect, window.location.origin) // window.location.origin(协议 + 域名| IP + 端口)
+  const url = new URL(redirect, window.location.origin)
   const path = url.pathname
   const queryParams: Record<string, string> = {}
 
@@ -157,6 +206,21 @@ const parseRedirect = () => {
   })
 
   return { path, queryParams }
+}
+
+const isCapslock = ref(false) // 是否大写锁定
+// 检查输入大小写
+function checkCapslock(event: KeyboardEvent) {
+  // 防止浏览器密码自动填充时报错
+  if (event instanceof KeyboardEvent) {
+    isCapslock.value = event.getModifierState('CapsLock')
+  }
+}
+
+// 设置登录凭证
+const setLoginCredentials = (username: string, password: string) => {
+  loginForm.value.username = username
+  loginForm.value.password = password
 }
 </script>
 <style lang="scss" scoped>
@@ -189,6 +253,14 @@ const parseRedirect = () => {
     @media (width <= 640px) {
       width: 340px;
     }
+    .form-title {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0 20px;
+      text-align: center;
+    }
     .input-wrapper {
       display: flex;
       align-items: center;
@@ -198,6 +270,18 @@ const parseRedirect = () => {
       height: 48px;
       margin-left: $spacing-sm;
       cursor: pointer;
+    }
+    .third-party-login {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      color: var(--el-text-color-secondary);
+      *:not(:first-child) {
+        margin-left: 20px;
+      }
+      .icon {
+        cursor: pointer;
+      }
     }
   }
 }

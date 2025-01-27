@@ -62,14 +62,12 @@ declare global {
     version: string
     /** 是否显示设置 */
     showSettings?: boolean
-    /** 是否折叠菜单 */
-    sidebarStatus: boolean
     /** 是否固定头部 */
     fixedHeader: boolean
     /** 是否显示多标签导航 */
     tagsView: boolean
-    /** 是否显示侧边栏Logo */
-    sidebarLogo: boolean
+    // /** 是否显示侧边栏Logo */
+    // sidebarLogo: boolean
     /** 导航栏布局(left|top|mix) */
     layout: string
     /** 主题颜色 */
@@ -80,22 +78,17 @@ declare global {
     size: string
     /** 语言( zh-cn| en) */
     language: string
-    /** 面包屑导航 */
-    breadcrumb: boolean
-    /** 面包屑导航图标 */
-    breadcrumbIcon: boolean
-    /** 标签页 */
-    tabs: boolean
-    /** 标签页图标 */
-    tabsIcon: boolean
     /** 是否开启水印 */
     watermarkEnabled: boolean
     /** 水印内容 */
     watermarkContent: string
     /** 设备类型desktop|mobile */
     device: string
-    /** 顶部菜单激活路径 */
-    activeTopMenuPath: string
+    sidebar: {
+      isOpened: boolean // 侧边栏状态
+      isLogo: boolean /** 是否显示侧边栏Logo */
+      withoutAnimation: boolean // 侧边栏展开收起时是否有动画
+    }
   }
 
   /**
@@ -119,18 +112,18 @@ declare global {
   declare namespace Menu {
     /** RouteVO，路由对象 */
     interface RouteVO {
-      /** 路由路径 */
-      path: string
-      /** 路由名称 */
-      name: string
+      /** 子路由列表 */
+      children: RouteVO[]
       /** 组件路径 */
-      component: string | (() => Promise<unknown>)
+      component?: string
+      /** 路由属性 */
+      meta?: Meta
+      /** 路由名称 */
+      name?: string
+      /** 路由路径 */
+      path?: string
       /** 跳转链接 */
       redirect?: string
-      /** 路由属性 */
-      meta: Meta
-      /** 子路由列表 */
-      children?: RouteVO[]
     }
     /** Meta，路由属性 */
     interface Meta {

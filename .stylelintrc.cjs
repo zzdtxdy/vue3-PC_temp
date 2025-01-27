@@ -57,7 +57,8 @@ module.exports = {
           'content',
           'return',
           'function',
-          'use'
+          'use',
+          'forward'
         ]
       }
     ]

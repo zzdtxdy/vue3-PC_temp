@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 18:21:34
+ * @LastEditTime: 2025-01-27 17:24:06
  * @FilePath: \vue3-PC_temp\src\store\modules\user.ts
  */
 import AuthAPI, { LoginData } from '@/api/auth'
@@ -70,7 +70,7 @@ export const useUserStore = defineStore('user', () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.logout()
         .then(async () => {
-          await resetTokenRouter()
+          await clearUserData()
           location.reload() // 重新加载页面
           resolve()
         })
@@ -81,7 +81,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // remove token Router
-  function resetTokenRouter() {
+  function clearUserData() {
     return new Promise<void>((resolve) => {
       clearToken()
       resetRouter()
@@ -94,7 +94,7 @@ export const useUserStore = defineStore('user', () => {
     login,
     getUserInfo,
     logout,
-    resetTokenRouter
+    clearUserData
   }
 })
 

@@ -20,7 +20,8 @@
       "captchaCode": {
         "required": "Please enter Verify Code"
       }
-    }
+    },
+    "otherLoginMethods": "Other login methods"
   },
   "navbar": {
     "dashboard": "Dashboard",

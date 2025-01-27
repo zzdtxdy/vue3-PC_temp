@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-25 19:52:03
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 18:22:15
+ * @LastEditTime: 2025-01-09 13:13:45
  * @FilePath: \vue3-PC_temp\src\hooks\useTheme.ts
  */
 import { storeToRefs } from 'pinia'
@@ -24,7 +24,7 @@ export const useTheme = () => {
    * @return {*}
    */
   const switchDark = () => {
-    if (!isDark.value) {
+    if (isDark.value) {
       // 在文档根元素 html上添加dark类
       document.documentElement.classList.add('dark')
     } else {

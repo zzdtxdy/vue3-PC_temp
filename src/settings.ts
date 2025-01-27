@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-15 14:27:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 17:37:51
+ * @LastEditTime: 2025-01-17 16:03:14
  * @FilePath: \vue3-PC_temp\src\settings.ts
  */
 import { SizeEnum } from './enums/SizeEnum'
@@ -28,20 +28,21 @@ const { pkg } = __APP_INFO__
 // 媒体查询 返回一个 MediaQueryList 对象 检测当前浏览器主题色是黑色
 const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 const defaultSettings: AppSettings = {
-  // 应用标题
+  // 系统标题
   title: pkg.name,
-  // 应用版本
+  // 系统版本
   version: pkg.version,
   // 是否显示设置
   showSettings: true,
-  // 是否显示多标签导航
+  // 是否显示标签视图
   tagsView: true,
-  // 是否折叠菜单
-  sidebarStatus: false,
   // 是否固定头部
   fixedHeader: true,
-  // 是否显示侧边栏Logo
-  sidebarLogo: true,
+  sidebar: {
+    isOpened: true, // 侧边栏状态
+    isLogo: true, // 是否显示侧边栏Logo
+    withoutAnimation: true
+  },
   // 布局模式：left-左侧模式(默认) top-顶部模式 mix-混合模式
   layout: LayoutEnum.LEFT,
   // 主题模式(是否暗黑)
@@ -54,17 +55,7 @@ const defaultSettings: AppSettings = {
   watermarkEnabled: false,
   // 水印内容
   watermarkContent: pkg.name,
-  // 面包屑导航
-  breadcrumb: true,
-  // 面包屑导航图标
-  breadcrumbIcon: true,
-  // 标签页
-  tabs: true,
-  // 标签页图标
-  tabsIcon: true,
   // 设备类型desktop|mobile
-  device: isMobile() ? DeviceEnum.MOBILE : DeviceEnum.DESKTOP,
-  // 顶部菜单激活路径
-  activeTopMenuPath: ''
+  device: isMobile() ? DeviceEnum.MOBILE : DeviceEnum.DESKTOP
 }
 export default defaultSettings

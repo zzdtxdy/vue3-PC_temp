@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-09-22 18:51:13
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 18:04:58
+ * @LastEditTime: 2025-01-20 17:04:53
  * @FilePath: \vue3-PC_temp\src\store\modules\global.ts
  */
 import defaultSettings from '@/settings'
@@ -14,6 +14,7 @@ import piniaPersistConfig from '@/store/persistConfig'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
 import { localGet } from '@/utils'
+import store from '@/store'
 
 export const useGlobalStore = defineStore({
   id: 'global',
@@ -36,3 +37,6 @@ export const useGlobalStore = defineStore({
   },
   persist: piniaPersistConfig('global')
 })
+export function useGlobalStoreHook() {
+  return useGlobalStore(store)
+}

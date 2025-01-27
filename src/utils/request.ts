@@ -3,28 +3,33 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-31 21:42:52
+ * @LastEditTime: 2025-01-27 17:21:54
  * @FilePath: \vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStoreHook } from '@/store/modules/user'
 import { ResultEnum } from '@/enums/ResultEnum'
-import { TOKEN_KEY } from '@/enums/CacheEnum'
+import { getToken } from '@/utils/auth'
+import qs from 'qs'
 // import { checkStatus } from './checkStatus'
 
 // 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
-  headers: { 'Content-Type': 'application/json;charset=utf-8' }
+  headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  paramsSerializer: (params) => qs.stringify(params)
 })
 
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = localStorage.getItem(TOKEN_KEY)
-    if (accessToken) {
+    const accessToken = getToken()
+    // 如果 Authorization 设置为 no-auth，则不携带 Token，用于登录、刷新 Token 等接口
+    if (config.headers.Authorization !== 'no-auth' && accessToken) {
       config.headers.Authorization = accessToken
+    } else {
+      delete config.headers.Authorization
     }
     return config
   },
@@ -36,8 +41,8 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
-    if (response.config.responseType === 'blob' || response.config.responseType === 'arraybuffer') {
+    // 如果响应是二进制流，则直接返回，用于下载文件、Excel 导出等
+    if (response.config.responseType === 'blob') {
       return response
     }
 
@@ -50,26 +55,16 @@ service.interceptors.response.use(
     return Promise.reject(new Error(msg || 'Error'))
   },
   (error: any) => {
-    // 异常处理
-    // 请求超时 && 网络错误单独判断，没有 response
-    if (error.message.indexOf('timeout') !== -1) ElMessage.error('请求超时！请您稍后重试')
-    if (error.message.indexOf('Network Error') !== -1) ElMessage.error('网络错误！请您稍后重试')
-    const { response } = error
+    // 非 2xx 状态码处理 401、403、500 等
+    const { config, response } = error
     // 根据服务器响应的错误状态码，做不同的处理
-    // if (response) checkStatus(response.status)
-    if (response.data) {
+    if (response) {
       const { code, msg } = response.data
-      if (code === ResultEnum.TOKEN_INVALID) {
-        ElNotification({
-          title: '提示',
-          message: '您的会话已过期，请重新登录',
-          type: 'info'
-        })
-        useUserStoreHook()
-          .resetTokenRouter()
-          .then(() => {
-            location.reload()
-          })
+      if (code === ResultEnum.ACCESS_TOKEN_INVALID) {
+        // Token 过期，刷新 Token
+        return handleTokenRefresh(config)
+      } else if (code === ResultEnum.REFRESH_TOKEN_INVALID) {
+        return Promise.reject(new Error(msg || '刷新令牌无效或过期'))
       } else {
         ElMessage.error(msg || '系统出错')
       }
@@ -80,3 +75,50 @@ service.interceptors.response.use(
 
 // 导出 axios 实例
 export default service
+
+// 刷新 Token 的锁
+let isRefreshing = false
+// 因 Token 过期导致失败的请求队列
+let requestsQueue: Array<() => void> = []
+
+// 刷新 Token 处理
+async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
+  return new Promise((resolve) => {
+    const requestCallback = () => {
+      config.headers.Authorization = getToken()
+      resolve(service(config))
+    }
+
+    requestsQueue.push(requestCallback)
+
+    if (!isRefreshing) {
+      isRefreshing = true
+
+      // 刷新 Token
+      useUserStoreHook()
+        .refreshToken()
+        .then(() => {
+          // Token 刷新成功，执行请求队列
+          requestsQueue.forEach((callback) => callback())
+          requestsQueue = []
+        })
+        .catch((error) => {
+          console.log('handleTokenRefresh error', error)
+          // Token 刷新失败，清除用户数据并跳转到登录
+          ElNotification({
+            title: '提示',
+            message: '您的会话已过期，请重新登录',
+            type: 'info'
+          })
+          useUserStoreHook()
+            .clearUserData()
+            .then(() => {
+              router.push('/login')
+            })
+        })
+        .finally(() => {
+          isRefreshing = false
+        })
+    }
+  })
+}

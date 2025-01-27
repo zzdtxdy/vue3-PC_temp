@@ -7,7 +7,7 @@
  * @FilePath: \vue3-PC_temp\src\components\SwitchDark\index.vue
 -->
 <template>
-  <el-switch v-model="globalStore.isDark" inline-prompt active-icon="Sunny" inactive-icon="Moon" />
+  <el-switch v-model="globalStore.isDark" inline-prompt active-icon="Moon" inactive-icon="Sunny" />
 </template>
 
 <script setup lang="ts" name="SwitchDark">
