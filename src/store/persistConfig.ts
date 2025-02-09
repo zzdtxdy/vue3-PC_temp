@@ -7,7 +7,11 @@ import { PersistenceOptions } from 'pinia-plugin-persistedstate'
  * @param {Storage} [storage=localStorage] - 存储方式，默认使用 localStorage
  * @return {PersistenceOptions} persist - 持久化配置对象
  */
-const piniaPersistConfig = (key: string, pick?: string[], storage: Storage = localStorage): PersistenceOptions => {
+const piniaPersistConfig = (
+  key: string,
+  pick?: string[],
+  storage: Storage = localStorage
+): PersistenceOptions => {
   return {
     key,
     storage,

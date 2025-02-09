@@ -3,10 +3,9 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 18:00:55
+ * @LastEditTime: 2025-01-31 17:46:14
  * @FilePath: \vue3-PC_temp\src\utils\index.ts
  */
-import { TOKEN_KEY } from '@/enums/CacheEnum'
 /**
  * @description 使用递归扁平化菜单，方便添加动态路由
  * @param {Array} menuList 菜单列表
@@ -14,7 +13,10 @@ import { TOKEN_KEY } from '@/enums/CacheEnum'
  */
 export function getFlatMenuList(menuList: Menu.RouteVO[]): Menu.RouteVO[] {
   const newMenuList: Menu.RouteVO[] = JSON.parse(JSON.stringify(menuList))
-  return newMenuList.flatMap((item) => [item, ...(item.children ? getFlatMenuList(item.children) : [])])
+  return newMenuList.flatMap((item) => [
+    item,
+    ...(item.children ? getFlatMenuList(item.children) : [])
+  ])
 }
 
 /**
@@ -30,10 +32,6 @@ export function getShowMenuList(menuList: Menu.RouteVO[]) {
     }
     return !item.meta?.hidden
   })
-}
-
-export function clearToken() {
-  localStorage.setItem(TOKEN_KEY, '')
 }
 
 /**

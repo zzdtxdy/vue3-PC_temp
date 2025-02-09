@@ -10,18 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import { translateRouteTitle } from "@/utils/i18n";
+import { translateRouteTitle } from '@/utils/i18n'
 
 defineProps({
   icon: {
     type: String,
-    default: "",
+    default: ''
   },
   title: {
     type: String,
-    default: "",
-  },
-});
+    default: ''
+  }
+})
 </script>
 
 <style lang="scss" scoped>

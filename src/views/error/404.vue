@@ -28,7 +28,8 @@ function back() {
       </div>
       <div class="bullshit__headline">The webmaster said that you can not enter this page...</div>
       <div class="bullshit__info">
-        Please check that the URL you entered is correct, or click the button below to return to the homepage.
+        Please check that the URL you entered is correct, or click the button below to return to the
+        homepage.
       </div>
       <a href="#" class="bullshit__return-home" @click.prevent="back">Back to home</a>
     </div>

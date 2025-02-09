@@ -1,11 +1,3 @@
-<!--
- * @Description: 
- * @Author: zhongzd
- * @Date: 2025-01-20 17:17:49
- * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-20 17:20:18
- * @FilePath: \vue3-PC_temp\src\layout\Sidebar\components\SidebarLogo.vue
--->
 <template>
   <div class="logo">
     <transition name="el-fade-in-linear" mode="out-in">

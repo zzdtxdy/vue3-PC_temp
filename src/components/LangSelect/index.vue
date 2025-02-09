@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-25 19:52:03
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-10-01 19:07:40
+ * @LastEditTime: 2025-02-09 11:52:52
  * @FilePath: \vue3-PC_temp\src\components\LangSelect\index.vue
 -->
 <template>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useGlobalStore } from '@/store/modules/global'
+import { useAppStoreHook } from '@/store/modules/app'
 import { LanguageEnum } from '@/enums/LanguageEnum'
 import { LanguageType } from '@/store/interface'
 const emit = defineEmits(['resetForm'])
@@ -44,7 +44,7 @@ const langOptions = [
   { label: 'English', value: LanguageEnum.EN }
 ]
 
-const globalStore = useGlobalStore()
+const globalStore = useAppStoreHook()
 const { locale, t } = useI18n()
 // 在组件加载时自动设置语言
 onMounted(() => {

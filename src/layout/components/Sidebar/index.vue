@@ -3,8 +3,8 @@
  * @Author: zhongzd
  * @Date: 2025-01-09 10:09:39
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-20 16:48:23
- * @FilePath: \vue3-PC_temp\src\layout\index.vue
+ * @LastEditTime: 2025-02-08 17:05:36
+ * @FilePath: \vue3-PC_temp\src\layout\Sidebar\index.vue
 -->
 <template>
   <div :class="{ 'has-logo': sidebarLogo }">
@@ -30,11 +30,12 @@
 
 <script setup lang="ts">
 import { LayoutEnum } from '@/enums/LayoutEnum'
-import { useGlobalStore, useAuthStore } from '@/store'
-
+import { useGlobalStoreHook, useAuthStore } from '@/store'
+import SidebarLogo from './components/SidebarLogo.vue'
+import SidebarMixTopMenu from './components/SidebarMixTopMenu.vue'
 import NavbarRight from '../NavBar/components/NavbarRight.vue'
 
-const globalStore = useGlobalStore()
+const globalStore = useGlobalStoreHook()
 const authStore = useAuthStore()
 
 const sidebarLogo = computed(() => globalStore.sidebar.logo)

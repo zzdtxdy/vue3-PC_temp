@@ -15,7 +15,7 @@
         v-if="onlyOneChild.meta"
         :to="{
           path: resolvePath(onlyOneChild.path),
-          query: onlyOneChild.meta.params,
+          query: onlyOneChild.meta.params
         }"
       >
         <el-menu-item
@@ -49,14 +49,14 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "SidebarMenuItem",
-  inheritAttrs: false,
-});
+  name: 'SidebarMenuItem',
+  inheritAttrs: false
+})
 
-import path from "path-browserify";
-import { RouteRecordRaw } from "vue-router";
+import path from 'path-browserify'
+import { RouteRecordRaw } from 'vue-router'
 
-import { isExternal } from "@/utils";
+import { isExternal } from '@/utils'
 
 const props = defineProps({
   /**
@@ -64,7 +64,7 @@ const props = defineProps({
    */
   item: {
     type: Object as PropType<RouteRecordRaw>,
-    required: true,
+    required: true
   },
 
   /**
@@ -72,7 +72,7 @@ const props = defineProps({
    */
   basePath: {
     type: String,
-    required: true,
+    required: true
   },
 
   /**
@@ -80,12 +80,12 @@ const props = defineProps({
    */
   isNest: {
     type: Boolean,
-    default: false,
-  },
-});
+    default: false
+  }
+})
 
 // 可见的唯一子节点
-const onlyOneChild = ref();
+const onlyOneChild = ref()
 
 /**
  * 检查是否仅有一个可见子节点
@@ -98,24 +98,24 @@ function hasOneShowingChild(children: RouteRecordRaw[] = [], parent: RouteRecord
   // 过滤出可见子节点
   const showingChildren = children.filter((route: RouteRecordRaw) => {
     if (!route.meta?.hidden) {
-      onlyOneChild.value = route;
-      return true;
+      onlyOneChild.value = route
+      return true
     }
-    return false;
-  });
+    return false
+  })
 
   // 仅有一个节点
   if (showingChildren.length === 1) {
-    return true;
+    return true
   }
 
   // 无子节点时
   if (showingChildren.length === 0) {
     // 父节点设置为唯一显示节点，并标记为无子节点
-    onlyOneChild.value = { ...parent, path: "", noShowingChildren: true };
-    return true;
+    onlyOneChild.value = { ...parent, path: '', noShowingChildren: true }
+    return true
   }
-  return false;
+  return false
 }
 
 /**
@@ -125,11 +125,11 @@ function hasOneShowingChild(children: RouteRecordRaw[] = [], parent: RouteRecord
  * @returns 绝对路径
  */
 function resolvePath(routePath: string) {
-  if (isExternal(routePath)) return routePath;
-  if (isExternal(props.basePath)) return props.basePath;
+  if (isExternal(routePath)) return routePath
+  if (isExternal(props.basePath)) return props.basePath
 
   // 拼接父路径和当前路径
-  return path.resolve(props.basePath, routePath);
+  return path.resolve(props.basePath, routePath)
 }
 </script>
 

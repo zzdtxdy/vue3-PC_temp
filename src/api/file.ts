@@ -1,10 +1,10 @@
-import request from "@/utils/request";
+import request from '@/utils/request'
 
 class FileAPI {
   /**
    * 文件上传地址
    */
-  static uploadUrl = import.meta.env.VITE_APP_BASE_API + "/api/v1/files";
+  static uploadUrl = import.meta.env.VITE_APP_BASE_API + '/api/v1/files'
 
   /**
    * 上传文件
@@ -12,16 +12,16 @@ class FileAPI {
    * @param file
    */
   static upload(file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
+    const formData = new FormData()
+    formData.append('file', file)
     return request<any, FileInfo>({
-      url: "/api/v1/files",
-      method: "post",
+      url: '/api/v1/files',
+      method: 'post',
       data: formData,
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 
   /**
@@ -31,10 +31,10 @@ class FileAPI {
    */
   static deleteByPath(filePath?: string) {
     return request({
-      url: "/api/v1/files",
-      method: "delete",
-      params: { filePath: filePath },
-    });
+      url: '/api/v1/files',
+      method: 'delete',
+      params: { filePath: filePath }
+    })
   }
 
   /**
@@ -45,28 +45,28 @@ class FileAPI {
   static downloadFile(url: string, fileName?: string) {
     return request({
       url: url,
-      method: "get",
-      responseType: "blob",
+      method: 'get',
+      responseType: 'blob'
     }).then((res) => {
-      const blob = new Blob([res.data]);
-      const a = document.createElement("a");
-      const url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName || "下载文件";
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+      const blob = new Blob([res.data])
+      const a = document.createElement('a')
+      const url = window.URL.createObjectURL(blob)
+      a.href = url
+      a.download = fileName || '下载文件'
+      a.click()
+      window.URL.revokeObjectURL(url)
+    })
   }
 }
 
-export default FileAPI;
+export default FileAPI
 
 /**
  * 文件API类型声明
  */
 export interface FileInfo {
   /** 文件名 */
-  name: string;
+  name: string
   /** 文件路径 */
-  url: string;
+  url: string
 }

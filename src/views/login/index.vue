@@ -28,15 +28,26 @@
                 <el-dropdown-item>
                   <el-tag>{{ defaultSettings.version }}</el-tag>
                 </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('root', '123456')">超级管理员：root/123456</el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">系统管理员：admin/123456</el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('test', '123456')">测试小游客：test/123456</el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('root', '123456')">
+                  超级管理员：root/123456
+                </el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">
+                  系统管理员：admin/123456
+                </el-dropdown-item>
+                <el-dropdown-item @click="setLoginCredentials('test', '123456')">
+                  测试小游客：test/123456
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </div>
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" :prefix-icon="User" size="large" :placeholder="$t('login.username')" />
+          <el-input
+            v-model="loginForm.username"
+            :prefix-icon="User"
+            size="large"
+            :placeholder="$t('login.username')"
+          />
         </el-form-item>
         <el-tooltip :visible="isCapslock" :content="$t('login.capsLock')" placement="right">
           <el-form-item prop="password">
@@ -69,7 +80,13 @@
           </div>
         </el-form-item>
         <!-- 登录按钮 -->
-        <el-button :loading="loading" type="primary" size="large" class="w-full" @click.prevent="handleLoginSubmit">
+        <el-button
+          :loading="loading"
+          type="primary"
+          size="large"
+          class="w-full"
+          @click.prevent="handleLoginSubmit"
+        >
           {{ $t('login.login') }}
         </el-button>
         <!-- 第三方登录 -->

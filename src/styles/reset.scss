@@ -15,11 +15,11 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    '微软雅黑', Arial, sans-serif;
   line-height: inherit; // 继承父元素
   // //优化文本的显示效果
-  -moz-osx-font-smoothing: grayscale;  // macOS 系统的 Firefox 浏览器  灰度抗锯齿显示得更加清晰锐利
+  -moz-osx-font-smoothing: grayscale; // macOS 系统的 Firefox 浏览器  灰度抗锯齿显示得更加清晰锐利
   -webkit-font-smoothing: antialiased; // 针对 WebKit 引擎（如 Safari 和旧版本的 Chrome 浏览器）控制字体平滑度
   text-rendering: optimizelegibility; //  优化了文本的可读性。它启用了更高级的字体功能（如连字、字形替换）和 kerning（字符间距调整）
 }

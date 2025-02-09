@@ -20,7 +20,7 @@
   height: 0;
   overflow: hidden;
   clear: both;
-  content: "";
+  content: '';
 }
 
 /* 文字单行省略号 */
@@ -79,7 +79,6 @@
 //   background-color: var(--el-border-color-darker);
 //   border-radius: 20px;
 // }
-
 
 /* 外边距、内边距全局样式 */
 @for $i from 0 through 100 {

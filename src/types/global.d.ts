@@ -77,7 +77,7 @@ declare global {
     /** 布局大小(default |large |small) */
     size: string
     /** 语言( zh-cn| en) */
-    language: string
+    language: LanguageType
     /** 是否开启水印 */
     watermarkEnabled: boolean
     /** 水印内容 */
@@ -113,10 +113,10 @@ declare global {
     /** RouteVO，路由对象 */
     interface RouteVO {
       /** 子路由列表 */
-      children: RouteVO[]
+      children?: RouteVO[]
       /** 组件路径 */
-      component?: string
-      /** 路由属性 */
+      component?: string | function
+      /** 路由额外属性 */
       meta?: Meta
       /** 路由名称 */
       name?: string
@@ -125,21 +125,60 @@ declare global {
       /** 跳转链接 */
       redirect?: string
     }
-    /** Meta，路由属性 */
+    /** Meta，路由额外属性 */
     interface Meta {
-      /** 路由title */
+      /**
+       * 菜单名称
+       * @example 'Dashboard'
+       */
       title?: string
-      /** 菜单是否隐藏(true-是 false-否) */
-      hidden?: boolean
-      /** ICON */
+
+      /**
+       * 菜单图标
+       * @example 'el-icon-edit'
+       */
       icon?: string
-      /** 【菜单】是否开启页面缓存 */
-      keepAlive?: boolean
-      // isAffix?: boolean
-      // isLink?: string
-      isFull?: boolean
-      /** 【目录】只有一个子路由是否始终显示 */
+
+      /**
+       * 是否隐藏菜单
+       * true 隐藏, false 显示
+       * @default false
+       */
+      hidden?: boolean
+
+      /**
+       * 始终显示父级菜单，即使只有一个子菜单
+       * true 显示父级菜单, false 隐藏父级菜单，显示唯一子节点
+       * @default false
+       */
       alwaysShow?: boolean
+
+      /**
+       * 是否固定在页签上
+       * true 固定, false 不固定
+       * @default false
+       */
+      affix?: boolean
+
+      /**
+       * 是否缓存页面
+       * true 缓存, false 不缓存
+       * @default false
+       */
+      keepAlive?: boolean
+
+      /**
+       * 是否在面包屑导航中隐藏
+       * true 隐藏, false 显示
+       * @default false
+       */
+      breadcrumb?: boolean
+
+      /** 参数 */
+      params?: KeyValue[]
+
+      /* 其他属性 */
+      [key: string]: any
     }
     /** 菜单查询参数 */
     interface MenuQuery {

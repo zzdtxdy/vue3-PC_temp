@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-07 16:17:50
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 17:37:41
+ * @LastEditTime: 2025-02-09 12:29:22
  * @FilePath: \vue3-PC_temp\src\App.vue
 -->
 <template>
@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import defaultSettings from '@/settings'
 import { SizeEnum } from '@/enums/SizeEnum'
-import { useGlobalStore } from './store/modules/global'
+import { useAppStoreHook } from './store/modules/app'
 
-const globalStore = useGlobalStore()
+const globalStore = useAppStoreHook()
 
 const locale = computed(() => globalStore.locale)
 const size = computed(() => globalStore.size as SizeEnum)

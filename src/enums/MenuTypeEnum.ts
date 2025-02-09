@@ -18,5 +18,5 @@ export const enum MenuTypeEnum {
   /**
    * 外链
    */
-  EXTLINK,
+  EXTLINK
 }

@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-27 17:21:54
+ * @LastEditTime: 2025-01-31 17:11:37
  * @FilePath: \vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
@@ -11,6 +11,7 @@ import { useUserStoreHook } from '@/store/modules/user'
 import { ResultEnum } from '@/enums/ResultEnum'
 import { getToken } from '@/utils/auth'
 import qs from 'qs'
+import router from '@/router'
 // import { checkStatus } from './checkStatus'
 
 // 创建 axios 实例
@@ -18,6 +19,7 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' },
+  // 将 params 对象序列化为查询字符串
   paramsSerializer: (params) => qs.stringify(params)
 })
 
@@ -76,9 +78,9 @@ service.interceptors.response.use(
 // 导出 axios 实例
 export default service
 
-// 刷新 Token 的锁
+// 防止重复刷新 Token。当多个请求因 Token 过期失败时，应该只发送 一次 刷新 Token 请求
 let isRefreshing = false
-// 因 Token 过期导致失败的请求队列
+// 存储所有因 Token 失效而失败的请求
 let requestsQueue: Array<() => void> = []
 
 // 刷新 Token 处理
@@ -103,7 +105,7 @@ async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
           requestsQueue = []
         })
         .catch((error) => {
-          console.log('handleTokenRefresh error', error)
+          console.log('handleTokenRefresh error 刷新令牌无效', error)
           // Token 刷新失败，清除用户数据并跳转到登录
           ElNotification({
             title: '提示',

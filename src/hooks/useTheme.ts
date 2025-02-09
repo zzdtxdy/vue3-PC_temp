@@ -9,14 +9,14 @@
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import defaultSettings from '@/settings'
-import { useGlobalStore } from '@/store/modules/global'
+import { useGlobalStoreHook } from '@/store/modules/global'
 import { modifyAlpha } from '@/utils'
 
 /**
  * @description 全局主题 hooks
  * */
 export const useTheme = () => {
-  const globalStore = useGlobalStore()
+  const globalStore = useGlobalStoreHook()
   const { isDark } = storeToRefs(globalStore)
 
   /**
@@ -49,7 +49,10 @@ export const useTheme = () => {
     rootStyle.setProperty(`--el-color-primary-dark-2`, newThemeColor)
 
     for (let i = 1; i < 10; i++) {
-      rootStyle.setProperty(`--el-color-primary-light-${i}`, `${modifyAlpha(newThemeColor, 1 - i * 0.1)}`)
+      rootStyle.setProperty(
+        `--el-color-primary-light-${i}`,
+        `${modifyAlpha(newThemeColor, 1 - i * 0.1)}`
+      )
     }
     globalStore.setGlobalState('themeColor', newThemeColor)
   }

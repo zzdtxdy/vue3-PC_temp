@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author: zhongzd
  * @Date: 2024-07-06 21:04:59
  * @LastEditors: zhongzd
@@ -53,10 +53,10 @@ module.exports = {
     'no-undef': 'off',
     '@typescript-eslint/no-explicit-any': 'off', // 关闭any类型的警告
     'vue/multi-word-component-names': 0, // 不强制要求组件命名 解决：index.vue组件命名问题（组件名称不合规范）
-    "@typescript-eslint/no-unused-vars": 'warn',
-    "no-unused-expressions": "off",
-    "@typescript-eslint/no-unused-expressions": "warn",
-    'vue/attribute-hyphenation': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'warn',
+    'vue/attribute-hyphenation': 'off'
   },
   // 全局变量
   globals: {

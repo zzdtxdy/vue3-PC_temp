@@ -3,23 +3,22 @@
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-27 17:24:06
+ * @LastEditTime: 2025-01-31 17:46:26
  * @FilePath: \vue3-PC_temp\src\store\modules\user.ts
  */
+import { useStorage } from '@vueuse/core'
 import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
-import { resetRouter } from '@/router'
 import store from '@/store'
 
 import { TOKEN_KEY } from '@/enums/CacheEnum'
 import { defineStore } from 'pinia'
-import { clearToken } from '@/utils'
+import { clearToken } from '@/utils/auth'
 import { useAuthStore } from '@/store/modules/auth'
+import { getRefreshToken, setRefreshToken, setToken } from '@/utils/auth'
 export const useUserStore = defineStore('user', () => {
-  const user = ref<UserInfo>({
-    roles: [], // 角色
-    perms: [] // 权限
-  })
+  // 用户信息 useStorage用于将响应式状态与浏览器的存储（如 localStorage 或 sessionStorage）同步
+  const userInfo = useStorage<UserInfo>('userInfo', {} as UserInfo)
 
   /**
    * 登录
@@ -31,8 +30,11 @@ export const useUserStore = defineStore('user', () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(loginData)
         .then((data) => {
-          const { tokenType, accessToken } = data
-          localStorage.setItem(TOKEN_KEY, tokenType + ' ' + accessToken) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          const { tokenType, accessToken, refreshToken } = data
+          setToken(tokenType + ' ' + accessToken) // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          if (refreshToken) {
+            setRefreshToken(refreshToken)
+          }
           resolve()
         })
         .catch((error) => {
@@ -47,14 +49,14 @@ export const useUserStore = defineStore('user', () => {
       UserAPI.getInfo()
         .then((data: UserInfo) => {
           if (!data) {
-            reject('Verification failed, please Login again.')
+            reject('登陆失败，请重新登陆！')
             return
           }
           if (!data.roles || data.roles.length <= 0) {
-            reject('getUserInfo: roles must be a non-null array!')
+            reject('该用户未分配角色，请联系管理员！')
             return
           }
-          Object.assign(user.value, { ...data })
+          userInfo.value = data
           useAuthStore().setPerms(data.perms)
           useAuthStore().setRoles(data.roles)
           resolve(data)
@@ -70,8 +72,7 @@ export const useUserStore = defineStore('user', () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.logout()
         .then(async () => {
-          await clearUserData()
-          location.reload() // 重新加载页面
+          clearUserData()
           resolve()
         })
         .catch((error) => {
@@ -80,21 +81,41 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  /**
+   * 刷新 token
+   */
+  function refreshToken() {
+    const refreshToken = getRefreshToken()
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.refreshToken(refreshToken)
+        .then((data: any) => {
+          const { tokenType, accessToken, refreshToken } = data
+          setToken(tokenType + ' ' + accessToken)
+          setRefreshToken(refreshToken)
+          resolve()
+        })
+        .catch((error: any) => {
+          console.log(' refreshToken  刷新失败', error)
+          reject(error)
+        })
+    })
+  }
   // remove token Router
   function clearUserData() {
     return new Promise<void>((resolve) => {
       clearToken()
-      resetRouter()
+      useAuthStore().resetRouter()
       resolve()
     })
   }
 
   return {
-    user,
+    userInfo,
     login,
     getUserInfo,
     logout,
-    clearUserData
+    clearUserData,
+    refreshToken
   }
 })
 
