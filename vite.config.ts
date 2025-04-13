@@ -87,6 +87,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: true,
       proxy: {
         /** 代理前缀为 /dev-api 的请求  */
+        [env.VITE_APP_BASE_API + '/api/mock']: {
+          changeOrigin: true,
+          // 接口地址
+          target: env.VITE_Mock,
+          rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), '')
+        },
+        /** 代理前缀为 /dev-api 的请求  */
         [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
           // 接口地址
@@ -190,11 +197,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
-          javascriptEnabled: true, // 否允许在 SCSS 文件中使用 JavaScript 表达式
+          // javascriptEnabled: true, // 否允许在 SCSS 文件中使用 JavaScript 表达式
+          api: 'modern-compiler',
           // 在每个 SCSS 文件自动引入 @/styles/var.scss 文件，并将其中的所有变量、mixin 等作为全局可用的
           additionalData: `
           @use "@/styles/var.scss" as *;
-          @import "@/styles/utils.scss";
+          @use "@/styles/utils.scss";
         `
         }
       },

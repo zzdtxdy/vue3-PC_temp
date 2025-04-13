@@ -1,13 +1,5 @@
-/*
- * @Description: 
- * @Author: zhongzd
- * @Date: 2024-11-18 11:18:10
- * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-20 16:29:47
- * @FilePath: \vue3-PC_temp\src\styles\var.scss
- */
-// 将 element-plus 主题中的变量文件导入当前文件，使其变量和混合宏可以在其他文件中使用。
-/* stylelint-disable-next-line at-rule-no-unknown */
+
+// 将 element-plus 主题中的变量文件导入当前文件，@forward 用于导出变量、混入和函数，供其他文件使用
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
@@ -32,17 +24,18 @@
   )
 );
 
-
 /* 全局作用域：在 :root 中定义的 CSS 变量可以在整个文档中使用，确保这些变量在所有组件和样式中都可访问。
 优先级高：:root 选择器的优先级比其他选择器高，因此在 :root 中定义的变量可以覆盖其他地方定义的同名变量。 */
 
 /** 全局SCSS变量 */
 :root {
-  --menu-background: #304156;
-  --menu-text: #bfcbd9;
+  --menu-background: var(--el-menu-bg-color);
+  --menu-text: var(--el-menu-text-color);
   --menu-active-text: var(--el-menu-active-color);
-  --menu-hover: #263445;
-  --sidebar-logo-background: #2d3748;
+  --menu-active-background: var(--el-color-primary-light-9);
+  --menu-hover: var(--el-menu-hover-bg-color);
+  --sidebar-logo-background: var(--el-menu-bg-color);
+  --sidebar-logo-text: var(--el-menu-active-color);
   // 修复表格 fixed 列被选中后由于透明色导致叠字的 bug
   // .el-table {
   //   --el-table-current-row-bg-color: rgb(235 243 250);
@@ -50,14 +43,14 @@
 }
 
 /* Font Sizes */
-$font-size-base: 16px; // 基本字体大小
-$font-size-small: 14px;
-$font-size-large: 20px;
+$font-size-base: 14px; // 基本字体大小
+$font-size-small: 12px;
+$font-size-large: 16px;
 
 /* Borders */
 $border-width: 1px;
 $border-style: solid;
-// $border-color: $gray-light;
+$border-color: var(--el-border-color);
 
 /* Border Radius */
 $border-radius-sm: 2px;
@@ -77,10 +70,11 @@ $spacing-xl: $spacing-unit * 4; // 32px
 $menu-background: var(--menu-background); // 菜单背景色
 $menu-text: var(--menu-text); // 菜单文字颜色
 $menu-active-text: var(--menu-active-text); // 菜单激活文字颜色
+$menu-active-background: var(--menu-active-background); // 菜单激活背景颜色
 $menu-hover: var(--menu-hover); // 菜单悬停背景色
 $sidebar-logo-background: var(--sidebar-logo-background); // 侧边栏 Logo 背景色
-
+$sidebar-logo-text: var(--sidebar-logo-text); // 侧边栏 Logo 文字颜色
 $sidebar-width: 210px; // 侧边栏宽度
 $sidebar-width-collapsed: 54px; // 侧边栏收缩宽度
 $navbar-height: 50px; // 导航栏高度
-$tags-view-height: 34px; // TagsView 高度
+$tabs-view-height: 40px; // TabsView 高度

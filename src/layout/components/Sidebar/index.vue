@@ -1,16 +1,17 @@
 <!--
- * @Description: 
+ * @Description: 侧边栏
  * @Author: zhongzd
  * @Date: 2025-01-09 10:09:39
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-02-08 17:05:36
- * @FilePath: \vue3-PC_temp\src\layout\Sidebar\index.vue
+ * @LastEditTime: 2025-04-13 23:26:20
+ * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\index.vue
 -->
 <template>
   <div :class="{ 'has-logo': sidebarLogo }">
     <!-- 混合布局顶部  -->
     <div v-if="isMixLayout" class="flex w-full">
       <SidebarLogo v-if="sidebarLogo" :collapse="isSidebarCollapsed" />
+      <!-- 混合布局左侧菜单 -->
       <SidebarMixTopMenu class="flex-1" />
       <NavbarRight />
     </div>
@@ -19,7 +20,8 @@
     <template v-else>
       <SidebarLogo v-if="sidebarLogo" :collapse="isSidebarCollapsed" />
       <el-scrollbar>
-        <SidebarMenu :menu-list="authStore.routes" base-path="" />
+        <!-- 左侧布局左侧菜单 -->
+        <SidebarMenu :menuList="authStore.authMenuList" />
       </el-scrollbar>
 
       <!-- 顶部布局导航 -->
@@ -29,21 +31,23 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutEnum } from '@/enums/LayoutEnum'
-import { useGlobalStoreHook, useAuthStore } from '@/store'
+import { LayoutEnum } from '@/enums/settings/LayoutEnum'
+import { useAppStore, useAuthStore } from '@/store'
 import SidebarLogo from './components/SidebarLogo.vue'
 import SidebarMixTopMenu from './components/SidebarMixTopMenu.vue'
+import SidebarMenu from './components/SidebarMenu.vue'
+
 import NavbarRight from '../NavBar/components/NavbarRight.vue'
 
-const globalStore = useGlobalStoreHook()
+const appStore = useAppStore()
 const authStore = useAuthStore()
 
-const sidebarLogo = computed(() => globalStore.sidebar.logo)
-const layout = computed(() => globalStore.layout)
+const sidebarLogo = computed(() => appStore.sidebar.isLogo)
+const layout = computed(() => appStore.layout)
 
 const isMixLayout = computed(() => layout.value === LayoutEnum.MIX)
 const isTopLayout = computed(() => layout.value === LayoutEnum.TOP)
-const isSidebarCollapsed = computed(() => !globalStore.sidebar.isOpen)
+const isSidebarCollapsed = computed(() => !appStore.sidebar.opened)
 </script>
 
 <style lang="scss" scoped>

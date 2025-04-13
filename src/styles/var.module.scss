@@ -1,0 +1,11 @@
+// export用于将 SCSS 变量导出为 JavaScript 可访问的对象
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:export {
+  sidebar-width: $sidebar-width;
+  navbar-height: $navbar-height;
+  tabs-view-height: $tabs-view-height;
+  menu-background: $menu-background;
+  menu-text: $menu-text;
+  menu-active-text: $menu-active-text;
+  menu-hover: $menu-hover;
+}

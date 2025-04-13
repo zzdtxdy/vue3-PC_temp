@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-04 11:43:07
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-24 17:50:21
+ * @LastEditTime: 2025-03-23 11:41:38
  * @FilePath: \vue3-PC_temp\src\directive\permission\index.ts
  */
 import { useAuthStoreHook } from '@/store/modules/auth'
@@ -14,31 +14,69 @@ import { Directive, DirectiveBinding } from 'vue'
  */
 export const hasPerm: Directive = {
   mounted(el: HTMLElement, binding: DirectiveBinding) {
-    // DOM绑定需要的按钮权限标识 // value 获取用户使用自定义指令绑定的内容
-    const { value: requiredPerms } = binding
-    if (requiredPerms) {
-      if (!useAuthStoreHook().hasAuth(requiredPerms)) {
-        el.parentNode && el.parentNode.removeChild(el)
-      }
-    } else {
-      throw new Error("need perms! Like v-has-perm=\"['sys:user:add','sys:user:edit']\"")
-    }
+    checkPermission(el, binding)
+  },
+  updated(el: HTMLElement, binding: DirectiveBinding) {
+    checkPermission(el, binding)
+  }
+}
+
+function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
+  const requiredPerms = binding.value
+
+  if (!requiredPerms || (typeof requiredPerms !== 'string' && !Array.isArray(requiredPerms))) {
+    throw new Error(
+      "需要提供权限标识！例如：v-has-perm=\"'sys:user:add'\" 或 v-has-perm=\"['sys:user:add', 'sys:user:edit']\""
+    )
+  }
+
+  const { roles, perms } = useAuthStoreHook()
+
+  // 超级管理员拥有所有权限
+  if (roles.includes('ROOT')) {
+    return
+  }
+
+  const hasAuth = Array.isArray(requiredPerms)
+    ? requiredPerms.some((perm) => perms.includes(perm))
+    : perms.includes(requiredPerms)
+  // 如果没有权限，移除该元素 && removeChild 方法必须在父节点上调用，用于移除父节点的子节点
+  if (!hasAuth && el.parentNode) {
+    el.parentNode.removeChild(el)
   }
 }
 
 /**
- * 角色权限
+ * 角色权限指令
  */
 export const hasRole: Directive = {
   mounted(el: HTMLElement, binding: DirectiveBinding) {
-    // DOM绑定需要的角色编码 // value 获取用户使用自定义指令绑定的内容
-    const { value: requiredRoles } = binding
-    if (requiredRoles) {
-      if (!useAuthStoreHook().hasAuth(requiredRoles, 'role')) {
-        el.parentNode && el.parentNode.removeChild(el)
-      }
-    } else {
-      throw new Error("need roles! Like v-has-role=\"['admin','test']\"")
-    }
+    checkRole(el, binding)
+  },
+  updated(el: HTMLElement, binding: DirectiveBinding) {
+    checkRole(el, binding)
+  }
+}
+
+function checkRole(el: HTMLElement, binding: DirectiveBinding) {
+  const requiredRoles = binding.value
+
+  // 校验传入的角色值是否合法
+  if (!requiredRoles || (typeof requiredRoles !== 'string' && !Array.isArray(requiredRoles))) {
+    throw new Error(
+      "需要提供角色标识！例如：v-has-role=\"'ADMIN'\" 或 v-has-role=\"['ADMIN', 'TEST']\""
+    )
+  }
+
+  const { roles } = useAuthStoreHook()
+
+  // 检查是否有对应角色权限
+  const hasAuth = Array.isArray(requiredRoles)
+    ? requiredRoles.some((role) => roles.includes(role))
+    : roles.includes(requiredRoles)
+
+  // 如果没有权限，移除元素
+  if (!hasAuth && el.parentNode) {
+    el.parentNode.removeChild(el)
   }
 }

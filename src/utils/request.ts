@@ -3,12 +3,12 @@
  * @Author: zhongzd
  * @Date: 2024-07-29 14:16:52
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-31 17:11:37
+ * @LastEditTime: 2025-03-29 13:33:21
  * @FilePath: \vue3-PC_temp\src\utils\request.ts
  */
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { useUserStoreHook } from '@/store/modules/user'
-import { ResultEnum } from '@/enums/ResultEnum'
+import { ResultEnum } from '@/enums/api/ResultEnum'
 import { getToken } from '@/utils/auth'
 import qs from 'qs'
 import router from '@/router'
@@ -49,7 +49,7 @@ service.interceptors.response.use(
     }
 
     const { code, data, msg } = response.data
-    if (code === ResultEnum.SUCCESS) {
+    if (code === ResultEnum.SUCCESS || code == 200) {
       return data
     }
 
@@ -81,17 +81,18 @@ export default service
 // 防止重复刷新 Token。当多个请求因 Token 过期失败时，应该只发送 一次 刷新 Token 请求
 let isRefreshing = false
 // 存储所有因 Token 失效而失败的请求
-let requestsQueue: Array<() => void> = []
+let waitingQueue: Array<() => void> = []
 
 // 刷新 Token 处理
 async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
   return new Promise((resolve) => {
-    const requestCallback = () => {
+    // 封装需要重试的请求
+    const retryRequest = () => {
       config.headers.Authorization = getToken()
       resolve(service(config))
     }
 
-    requestsQueue.push(requestCallback)
+    waitingQueue.push(retryRequest)
 
     if (!isRefreshing) {
       isRefreshing = true
@@ -101,8 +102,8 @@ async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
         .refreshToken()
         .then(() => {
           // Token 刷新成功，执行请求队列
-          requestsQueue.forEach((callback) => callback())
-          requestsQueue = []
+          waitingQueue.forEach((callback) => callback())
+          waitingQueue = []
         })
         .catch((error) => {
           console.log('handleTokenRefresh error 刷新令牌无效', error)
@@ -119,6 +120,8 @@ async function handleTokenRefresh(config: InternalAxiosRequestConfig) {
             })
         })
         .finally(() => {
+          console.log(11111)
+
           isRefreshing = false
         })
     }

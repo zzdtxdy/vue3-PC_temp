@@ -3,30 +3,33 @@
  * @Author: zhongzd
  * @Date: 2025-01-09 10:09:39
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-02-08 14:15:11
+ * @LastEditTime: 2025-04-12 23:27:42
  * @FilePath: \vue3-PC_temp\src\router\index.ts
  */
 import {
   createRouter,
+  createWebHashHistory,
   createWebHistory,
   NavigationGuardNext,
   RouteLocationNormalized,
   RouteRecordRaw
 } from 'vue-router'
-import { staticRouter } from '@/router/modules/staticRouter'
+import { errorRouter, staticRouter } from '@/router/modules/staticRouter'
 export const Layout = () => import('@/layout/index.vue')
 import { useAuthStore } from '@/store/modules/auth'
 import { useUserStore } from '@/store/modules/user'
 import NProgress from '@/utils/nprogress'
 import { WHITE_LIST } from '@/settings'
 import { getToken } from '@/utils/auth'
+import { initDynamicRouter } from './modules/dynamicRouter'
+import { getTimeState } from '@/utils'
 
 /**
  * 创建路由
  */
 const router = createRouter({
   history: createWebHistory(),
-  routes: staticRouter,
+  routes: [...staticRouter, ...errorRouter],
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
@@ -35,55 +38,57 @@ const router = createRouter({
  * @description 路由拦截 beforeEach
  * */
 router.beforeEach(async (to, from, next) => {
-  NProgress.start()
   const userStore = useUserStore()
   const authStore = useAuthStore()
   const isLogin = !!getToken() // 判断是否登录
-  // 已登录
-  if (isLogin) {
-    if (to.path === '/login') {
-      // 已登录，访问登录页，跳转到首页
-      next({ path: '/' })
-    } else {
-      if (authStore.isRoutesLoaded) {
-        // 如果未匹配到任何路由 用于描述匹配到的路由记录数组
-        if (to.matched.length === 0) {
-          return next(from.name ? { name: from.name } : '/404')
-        } else {
-          // 动态设置标题
-          const title = import.meta.env.VITE_GLOB_APP_TITLE
-          document.title = to.meta.title ? `${to.meta.title} - ${title}` : title
 
-          next()
-        }
-      } else {
-        try {
-          // 生成动态路由
-          const dynamicRoutes = await authStore.generateRoutes()
-          dynamicRoutes.forEach((route: Menu.RouteVO) => router.addRoute(route as RouteRecordRaw))
-          // 用户登录后 避免用户回退到登录页
-          next({ ...to, replace: true })
-        } catch (error) {
-          console.error(error)
-          // 路由加载失败，重置 路由&&token 并重定向到登录页
-          await useUserStore().clearUserData()
-          redirectToLogin(to, next)
-          NProgress.done()
-        }
-      }
-    }
-  } else {
-    // 未登录
-    if (WHITE_LIST.includes(to.path)) {
-      next() // 在白名单，直接进入
-    } else {
-      // 清空路由 && token
-      await userStore.clearUserData()
-      // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-      redirectToLogin(to, next)
-      NProgress.done()
+  // 1.NProgress 开始
+  NProgress.start()
+
+  // 2.动态设置标题
+  const title = import.meta.env.VITE_GLOB_APP_TITLE
+  document.title = to.meta.title ? `${to.meta.title} - ${title}` : title
+
+  // 3.判断是否访问登陆页，有 Token 就在当前页面，没有 Token 重置路由清除token到登陆页
+  if (to.path.toLocaleLowerCase() === '/login') {
+    if (isLogin) return next(from.fullPath)
+    await userStore.clearUserData()
+    return next()
+  }
+
+  // 4.判断访问页面是否在路由白名单地址(静态路由)中，如果存在直接放行
+  if (WHITE_LIST.includes(to.path)) return next()
+
+  // 5.判断是否有 Token，没有重定向到 login 页面
+  if (!isLogin) return redirectToLogin(to, next)
+
+  // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
+  if (!authStore.authMenuList.length) {
+    try {
+      // 生成动态路由
+      await initDynamicRouter()
+      ElNotification({
+        title: getTimeState(),
+        type: 'success',
+        duration: 1000
+      })
+      return next({ ...to, replace: true })
+    } catch (error) {
+      // 路由加载失败，重置 路由&&token 并重定向到登录页
+      console.error(error)
+      await useUserStore().clearUserData()
+      return redirectToLogin(to, next)
     }
   }
+  // 7.存储 routerName 做按钮权限筛选
+  // authStore.setRouteName(to.name as string)
+
+  // 8.如果未匹配到任何路由 用于描述匹配到的路由记录数组 留着当前页面
+  if (to.matched.length === 0) {
+    return next('404')
+  }
+  // 9.正常访问页面
+  next()
 })
 
 /**

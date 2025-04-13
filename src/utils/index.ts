@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-31 17:46:14
+ * @LastEditTime: 2025-04-04 12:48:49
  * @FilePath: \vue3-PC_temp\src\utils\index.ts
  */
 /**
@@ -20,7 +20,7 @@ export function getFlatMenuList(menuList: Menu.RouteVO[]): Menu.RouteVO[] {
 }
 
 /**
- * @description 使用递归过滤出需要渲染在左侧菜单的列表 (需剔除 hidden == true 的菜单)
+ * @description 使用递归过滤出需要渲染在左侧菜单的列表 (需剔除 isHide == true 的菜单)
  * @param {Array} menuList 菜单列表
  * @returns {Array}
  * */
@@ -30,7 +30,7 @@ export function getShowMenuList(menuList: Menu.RouteVO[]) {
     if (item.children?.length) {
       item.children = getShowMenuList(item.children)
     }
-    return !item.meta?.hidden
+    return !item.meta?.isHide
   })
 }
 
@@ -187,4 +187,28 @@ export function deepEqual(obj1: any, obj2: any): boolean {
   }
 
   return true
+}
+
+/**
+ * 判断是否是外部链接
+ *
+ * @param {string} path
+ * @returns {Boolean}
+ */
+export function isExternal(path: string) {
+  const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path)
+  return isExternal
+}
+
+/**
+ * 切换浅色主题下的侧边栏颜色方案
+ *
+ * @param isBlue 布尔值，表示是否开启深蓝色侧边栏颜色方案
+ */
+export function toggleSidebarColor(isBuleSidebar: boolean) {
+  if (isBuleSidebar) {
+    document.documentElement.classList.add('sidebar-color-blue')
+  } else {
+    document.documentElement.classList.remove('sidebar-color-blue')
+  }
 }

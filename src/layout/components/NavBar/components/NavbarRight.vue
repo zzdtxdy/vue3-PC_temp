@@ -1,7 +1,7 @@
 <template>
-  <div class="navbar__right">
-    <!-- 非手机设备（窄屏）才显示 -->
-    <template v-if="!isMobile">
+  <div :class="['navbar__right', navbarRightClass]">
+    <!-- 桌面端显示 -->
+    <template v-if="isDesktop">
       <!-- 搜索 -->
       <MenuSearch />
 
@@ -14,32 +14,92 @@
       <!-- 语言选择 -->
       <LangSelect />
 
-      <!-- 消息通知 -->
-      <Notification />
+      <!-- 通知下拉 -->
+      <NoticeDropdown />
     </template>
 
     <!-- 用户头像（个人中心、注销登录等） -->
-    <UserProfile />
+    <el-dropdown trigger="click">
+      <div class="user-profile">
+        <img class="user-profile__avatar" :src="userStore.userInfo.value.avatar" />
+        <span class="user-profile__name">{{ userStore.userInfo.value.username }}</span>
+      </div>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item @click="handleProfileClick">
+            {{ $t('navbar.profile') }}
+          </el-dropdown-item>
+          <el-dropdown-item divided @click="logout">
+            {{ $t('navbar.logout') }}
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
 
     <!-- 设置面板 -->
-    <div v-if="defaultSettings.showSettings" @click="settingStore.settingsVisible = true">
+    <div v-if="defaultSettings.showSettings" @click="appStore.showSettings = true">
       <div class="i-svg:setting" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import defaultSettings from "@/settings";
-import { DeviceEnum } from "@/enums/DeviceEnum";
+import defaultSettings from '@/settings'
+import { DeviceEnum } from '@/enums/settings/DeviceEnum'
+import { useAppStore, useUserStore, useTabsViewStore } from '@/store'
 
-import { useAppStore, useSettingsStore } from "@/store";
+import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
 
-import UserProfile from "./UserProfile.vue";
-import Notification from "./Notification.vue";
+const appStore = useAppStore()
+const userStore = useUserStore()
+const tabsViewStore = useTabsViewStore()
 
-const appStore = useAppStore();
-const settingStore = useSettingsStore();
+const route = useRoute()
+const router = useRouter()
+const isDesktop = computed(() => appStore.device === DeviceEnum.DESKTOP)
 
-const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
+/**
+ * 打开个人中心页面
+ */
+function handleProfileClick() {
+  router.push({ name: 'Profile' })
+}
+
+// 根据主题和侧边栏配色方案选择 navbar 右侧的样式类
+const navbarRightClass = computed(() => {
+  // 如果暗黑主题
+  if (appStore.isDark) {
+    return 'navbar__right--white'
+  }
+
+  // 如果侧边栏是经典蓝
+  if (appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE) {
+    return 'navbar__right--white'
+  }
+
+  // 默认返回空字符串
+  return ''
+})
+
+/**
+ * 注销登录
+ */
+function logout() {
+  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+    lockScroll: false
+  }).then(() => {
+    userStore
+      .logout()
+      .then(() => {
+        tabsViewStore.delAllViews()
+      })
+      .then(() => {
+        router.push(`/login?redirect=${route.fullPath}`)
+      })
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -47,7 +107,6 @@ const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
   display: flex;
   align-items: center;
   justify-content: center;
-
   & > * {
     display: inline-block;
     min-width: 40px;
@@ -56,23 +115,31 @@ const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
     color: var(--el-text-color);
     text-align: center;
     cursor: pointer;
-
     &:hover {
       background: rgb(0 0 0 / 10%);
     }
   }
+  .user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 13px;
+    &__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    &__name {
+      margin-left: 10px;
+    }
+  }
 }
-
-:deep(.el-divider--horizontal) {
-  margin: 10px 0;
+.layout-top .navbar__right--white > *,
+.layout-mix .navbar__right--white > * {
+  color: #ffffff;
 }
-
 .dark .navbar__right > *:hover {
-  background: rgb(255 255 255 / 20%);
-}
-
-.layout-top .navbar__right > *,
-.layout-mix .navbar__right > * {
-  color: #fff;
+  color: #cccccc;
 }
 </style>

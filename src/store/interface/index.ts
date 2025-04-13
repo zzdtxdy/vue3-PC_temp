@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Author: zhongzd
+ * @Date: 2024-08-16 20:10:27
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-04-04 12:45:40
+ * @FilePath: \vue3-PC_temp\src\store\interface\index.ts
+ */
 import { RouteRecordRaw } from 'vue-router'
 
 export type LayoutType = 'vertical' | 'classic' | 'transverse' | 'columns'
@@ -18,7 +26,7 @@ export interface TabsMenuProps {
   title: string
   path: string
   name: string
-  close: boolean
+  isAffix: boolean
   isKeepAlive: boolean
 }
 

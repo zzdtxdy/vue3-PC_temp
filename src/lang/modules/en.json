@@ -50,7 +50,7 @@
     "interface": "Interface",
     "navigation": "Navigation",
     "themeColor": "Theme Color",
-    "tagsView": "Tags View",
+    "tabsView": "Tags View",
     "fixedHeader": "Fixed Header",
     "sidebarLogo": "Sidebar Logo",
     "watermark": "Watermark"

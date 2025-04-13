@@ -1,9 +1,9 @@
 /*
- * @Description:
+ * @Description: 
  * @Author: zhongzd
  * @Date: 2024-07-06 21:04:59
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-02-08 14:08:48
+ * @LastEditTime: 2025-04-06 16:21:24
  * @FilePath: \vue3-PC_temp\.prettierrc.cjs
  */
 module.exports = {

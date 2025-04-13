@@ -5,6 +5,8 @@ import en from 'element-plus/es/locale/lang/en'
 import piniaPersistConfig from '@/store/persistConfig'
 import store from '@/store'
 import { LanguageType } from '../interface'
+import { SidebarColor } from '@/enums/settings/ThemeEnum'
+import { toggleSidebarColor } from '@/utils'
 
 export const useAppStore = defineStore(
   'app',
@@ -17,11 +19,16 @@ export const useAppStore = defineStore(
     /** 是否显示设置 */
     const showSettings = ref(defaultSettings.showSettings)
     /** 是否显示标签视图 */
-    const tagsView = ref(defaultSettings.tagsView)
+    const tabsView = ref(defaultSettings.tabsView)
+    /** 是否 显示多标签导航图标 */
+    const tabsIcon = ref(defaultSettings.tabsIcon)
+
     /** 是否固定头部 */
     const fixedHeader = ref(defaultSettings.fixedHeader)
     /** 侧边栏配置 */
     const sidebar = reactive(defaultSettings.sidebar)
+    // 侧边栏配色方案 (经典蓝/极简白)
+    const sidebarColorScheme = ref(defaultSettings.sidebarColorScheme)
     /** 布局模式 */
     const layout = ref(defaultSettings.layout)
     /** 主题模式(是否暗黑) */
@@ -38,7 +45,8 @@ export const useAppStore = defineStore(
     const watermarkContent = ref(defaultSettings.watermarkContent)
     /** 设备类型 */
     const device = ref(defaultSettings.device)
-
+    /** 顶部菜单激活路径 */
+    const activeTopMenuPath = ref('')
     // 定义 getters
     /** 当前语言环境 */
     const locale = computed(() => (language.value === 'en' ? en : zhCn))
@@ -60,8 +68,8 @@ export const useAppStore = defineStore(
         case 'showSettings':
           showSettings.value = value
           break
-        case 'tagsView':
-          tagsView.value = value
+        case 'tabsView':
+          tabsView.value = value
           break
         case 'fixedHeader':
           fixedHeader.value = value
@@ -93,16 +101,42 @@ export const useAppStore = defineStore(
         case 'device':
           device.value = value
           break
+        case 'activeTopMenuPath':
+          activeTopMenuPath.value = value
+          break
+        case 'tabsIcon':
+          tabsIcon.value = value
+          break
         default:
           console.warn(`Unknown key: ${key}`)
       }
     }
+    // 切换侧边栏
+    function toggleSidebar() {
+      sidebar.opened = !sidebar.opened
+    }
+    // 关闭侧边栏
+    function closeSideBar() {
+      sidebar.opened = false
+    }
 
+    // 打开侧边栏
+    function openSideBar() {
+      sidebar.opened = true
+    }
+    //  监听浅色侧边栏配色方案变化
+    watch(
+      [sidebarColorScheme],
+      ([newSidebarColorScheme]) => {
+        toggleSidebarColor(newSidebarColorScheme === SidebarColor.CLASSIC_BLUE)
+      },
+      { immediate: true }
+    )
     return {
       title,
       version,
       showSettings,
-      tagsView,
+      tabsView,
       fixedHeader,
       sidebar,
       layout,
@@ -114,7 +148,13 @@ export const useAppStore = defineStore(
       watermarkContent,
       device,
       locale,
-      setGlobalState
+      activeTopMenuPath,
+      toggleSidebar,
+      closeSideBar,
+      openSideBar,
+      tabsIcon,
+      setGlobalState,
+      sidebarColorScheme
     }
   },
   {

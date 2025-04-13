@@ -3,16 +3,17 @@
  * @Author: zhongzd
  * @Date: 2024-08-15 14:27:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-17 16:03:14
+ * @LastEditTime: 2025-04-12 21:13:03
  * @FilePath: \vue3-PC_temp\src\settings.ts
  */
-import { SizeEnum } from './enums/SizeEnum'
-import { LayoutEnum } from './enums/LayoutEnum'
-import { DeviceEnum } from './enums/DeviceEnum'
+import { ComponentSize } from './enums/settings/LayoutEnum'
+import { LayoutEnum } from './enums/settings/LayoutEnum'
+import { DeviceEnum } from './enums/settings/DeviceEnum'
 import { getBrowserLang, isMobile } from './utils'
+import { SidebarColor } from './enums/settings/ThemeEnum'
 
 // 首页地址（默认）
-export const HOME_URL: string = 'dashboard'
+export const HOME_URL: string = '/home/index'
 
 // 路由白名单地址（本地存在的路由 staticRouter.ts 中）
 export const WHITE_LIST: string[] = ['/500', '/login']
@@ -35,11 +36,13 @@ const defaultSettings: AppSettings = {
   // 是否显示设置
   showSettings: true,
   // 是否显示标签视图
-  tagsView: true,
+  tabsView: true,
+  // 是否显示多标签导航图标
+  tabsIcon: true,
   // 是否固定头部
   fixedHeader: true,
   sidebar: {
-    isOpened: true, // 侧边栏状态
+    opened: true, // 侧边栏状态
     isLogo: true, // 是否显示侧边栏Logo
     withoutAnimation: true
   },
@@ -48,7 +51,7 @@ const defaultSettings: AppSettings = {
   // 主题模式(是否暗黑)
   isDark: mediaQueryList.matches ? true : false,
   // 布局大小(default |large |small)
-  size: SizeEnum.DEFAULT,
+  size: ComponentSize.DEFAULT,
   language: getBrowserLang(),
   themeColor: '#409EFF',
   // 是否开启水印
@@ -56,6 +59,10 @@ const defaultSettings: AppSettings = {
   // 水印内容
   watermarkContent: pkg.name,
   // 设备类型desktop|mobile
-  device: isMobile() ? DeviceEnum.MOBILE : DeviceEnum.DESKTOP
+  device: isMobile() ? DeviceEnum.MOBILE : DeviceEnum.DESKTOP,
+  // 激活的顶部菜单路径
+  activeTopMenuPath: '',
+  // 侧边栏配色方案
+  sidebarColorScheme: SidebarColor.CLASSIC_BLUE
 }
 export default defaultSettings

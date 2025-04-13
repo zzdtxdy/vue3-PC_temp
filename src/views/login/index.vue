@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-09 15:18:28
+ * @LastEditTime: 2025-04-05 22:26:49
  * @FilePath: \vue3-PC_temp\src\views\login\index.vue
 -->
 <template>
@@ -111,7 +111,7 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 import router from '@/router'
 import { getTimeState } from '@/utils'
-import { LocationQuery } from 'vue-router'
+import { LocationQuery, RouteLocationRaw } from 'vue-router'
 import defaultSettings from '@/settings'
 // pinia
 const userStore = useUserStore()
@@ -177,52 +177,57 @@ const getCaptcha = () => {
     captchaBase64.value = data.captchaBase64
   })
 }
-/** 登录表单提交 */
-const handleLoginSubmit = () => {
-  loginFormRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      loading.value = true
-      userStore
-        .login(loginForm.value)
-        .then(() => {
-          const { path, queryParams } = parseRedirect()
-          ElNotification({
-            title: getTimeState(),
-            type: 'success',
-            duration: 1000
-          })
-          router.push({ path: path, query: queryParams })
-        })
-        .catch(() => {
-          getCaptcha()
-        })
-        .finally(() => {
-          loading.value = false
-        })
-    }
-  })
+
+// 登录提交处理
+async function handleLoginSubmit() {
+  try {
+    // 1. 表单验证
+    const valid = await loginFormRef.value?.validate()
+    if (!valid) return
+
+    loading.value = true
+
+    // 2. 执行登录
+    await userStore.login(loginForm.value)
+
+    // 3. 获取用户信息
+    await userStore.getUserInfo()
+
+    // 4. 解析并跳转目标地址
+    const redirect = resolveRedirectTarget(route.query)
+    await router.push(redirect)
+    // TODO 5. 判断用户是否点击了记住我？采用明文保存或使用jsencrypt库？
+  } catch (error) {
+    // 5. 统一错误处理
+    getCaptcha() // 刷新验证码
+    console.error('登录失败:', error)
+  } finally {
+    loading.value = false
+  }
 }
 /**
- * 解析 redirect 字符串 为 path 和  queryParams
- *
- * @returns { path: string, queryParams: Record<string, string> } 解析后的 path 和 queryParams
+ * 解析重定向目标
+ * @param query 路由查询参数
+ * @returns 标准化后的路由地址对象
  */
-function parseRedirect(): {
-  path: string
-  queryParams: Record<string, string>
-} {
-  const query: LocationQuery = route.query
-  const redirect = (query.redirect as string) ?? '/'
+function resolveRedirectTarget(query: LocationQuery): RouteLocationRaw {
+  // 默认跳转路径
+  const defaultPath = '/'
 
-  const url = new URL(redirect, window.location.origin)
-  const path = url.pathname
-  const queryParams: Record<string, string> = {}
+  // 获取原始重定向路径
+  const rawRedirect = (query.redirect as string) || defaultPath
 
-  url.searchParams.forEach((value, key) => {
-    queryParams[key] = value
-  })
-
-  return { path, queryParams }
+  try {
+    // 6. 使用Vue Router解析路径
+    const resolved = router.resolve(rawRedirect)
+    return {
+      path: resolved.path,
+      query: resolved.query
+    }
+  } catch {
+    // 7. 异常处理：返回安全路径
+    return { path: defaultPath }
+  }
 }
 
 const isCapslock = ref(false) // 是否大写锁定

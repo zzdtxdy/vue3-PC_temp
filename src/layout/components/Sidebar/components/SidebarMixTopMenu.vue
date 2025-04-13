@@ -1,32 +1,25 @@
-<!--
- * @Description: 
- * @Author: zhongzd
- * @Date: 2025-01-20 17:17:49
- * @LastEditors: zhongzd
- * @LastEditTime: 2025-02-08 21:05:06
- * @FilePath: \vue3-PC_temp\src\layout\Sidebar\components\SidebarMixTopMenu.vue
--->
 <!-- 混合布局顶部菜单 -->
 <template>
   <el-scrollbar>
     <el-menu
       mode="horizontal"
       :default-active="activePath"
-      :background-color="variables['menu-background']"
-      :text-color="variables['menu-text']"
-      :active-text-color="variables['menu-active-text']"
+      :background-color="menuBackgroundColor"
+      :text-color="menuTextColor"
+      :active-text-color="menuActiveTextColor"
       @select="handleMenuSelect"
     >
       <el-menu-item v-for="route in topMenus" :key="route.path" :index="route.path">
         <template #title>
-          <template v-if="route.meta && route.meta.icon">
-            <el-icon v-if="route.meta.icon.startsWith('el-icon')" class="sub-el-icon">
-              <component :is="route.meta.icon.replace('el-icon-', '')" />
-            </el-icon>
-            <svg-icon v-else :icon-class="route.meta.icon" />
-          </template>
+          <el-icon
+            v-if="route.meta?.icon && String(route.meta.icon).startsWith('el-icon')"
+            class="sub-el-icon"
+          >
+            <component :is="String(route.meta.icon).replace('el-icon-', '')" />
+          </el-icon>
+          <div v-else-if="route.meta?.icon" :class="`i-svg:${route.meta.icon}`" />
           <span v-if="route.path === '/'">首页</span>
-          <span v-else-if="route.meta && route.meta.title" class="ml-1">
+          <span v-else-if="route.meta?.title" class="ml-1">
             {{ translateRouteTitle(route.meta.title) }}
           </span>
         </template>
@@ -36,71 +29,85 @@
 </template>
 
 <script lang="ts" setup>
-/**
- * 导入模块：先外部库，再内部模块，最后导入样式和工具类
- */
-import { LocationQueryRaw, RouteRecordRaw } from 'vue-router'
-import { useAuthStore, useGlobalStoreHook } from '@/store'
+import { computed, ref, onMounted } from 'vue'
+import { useRouter, useRoute, LocationQueryRaw } from 'vue-router'
+import { useAuthStore, useAppStore } from '@/store'
 import { translateRouteTitle } from '@/utils/i18n'
-import variables from '@/styles/variables.module.scss'
-import { isObject } from 'radash'
+import variables from '@/styles/var.module.scss'
+import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
 
-/**
- * 定义状态：先定义 reactive、ref 或 computed 状态
- */
 const router = useRouter()
-const globalStore = useGlobalStoreHook()
+const appStore = useAppStore()
 const authStore = useAuthStore()
 
 // 当前激活的顶部菜单路径
-const activePath = computed(() => globalStore.activeTopMenuPath)
+const activePath = computed(() => appStore.activeTopMenuPath)
+
+// 动态获取菜单样式
+const menuBackgroundColor = computed(() =>
+  appStore.isDark || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-background']
+    : undefined
+)
+const menuTextColor = computed(() =>
+  appStore.isDark || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-text']
+    : undefined
+)
+const menuActiveTextColor = computed(() =>
+  appStore.isDark || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-active-text']
+    : undefined
+)
 
 // 顶部菜单列表
-const topMenus = ref<RouteRecordRaw[]>([])
+const topMenus = ref<Menu.RouteVO[]>([])
 
-// 获取当前路由路径的顶部菜单路径
-const activeTopMenuPath =
-  useRoute().path.split('/').filter(Boolean).length > 1
-    ? useRoute().path.match(/^\/[^/]+/)?.[0] || '/'
-    : '/'
-
-// 设置当前激活的顶部菜单路径
-globalStore.activeTopMenu(activeTopMenuPath)
-
-/**
- * 处理菜单点击事件，切换顶部菜单并加载对应的左侧菜单
- * @param routePath 点击的菜单路径
- */
-const handleMenuSelect = (routePath: string) => {
-  globalStore.activeTopMenu(routePath) // 设置激活的顶部菜单
-  authStore.setMixedLayoutLeftRoutes(routePath) // 更新左侧菜单
-  navigateToFirstLeftMenu(authStore.mixedLayoutLeftRoutes as RouteRecordRaw[]) // 跳转到左侧第一个菜单
+// 初始化顶部菜单路径
+/* 
+目标：提取当前路径的顶级部分，用于激活顶部菜单。
+逻辑：如果路径包含多级（如 /dashboard/analytics），提取顶级路径（如 /dashboard）。
+如果路径是一级或根路径（如 / 或 /dashboard），直接返回 '/' */
+const initializeActiveTopMenuPath = () => {
+  const currentPath = useRoute().path
+  const activeTopMenuPath =
+    currentPath.split('/').filter(Boolean).length > 1
+      ? currentPath.match(/^\/[^/]+/)?.[0] || '/'
+      : '/'
+  appStore.setGlobalState('activeTopMenuPath', activeTopMenuPath)
 }
 
-/**
- * 跳转到左侧第一个可访问的菜单
- * @param menus 左侧菜单列表
- */
-const navigateToFirstLeftMenu = (menus: RouteRecordRaw[]) => {
-  if (menus.length === 0) return
+// 处理菜单点击事件
+const handleMenuSelect = (routePath: string) => {
+  appStore.setGlobalState('activeTopMenuPath', routePath) // 设置激活的顶部菜单
+  authStore.setMixLeftMenuList(routePath) // 更新左侧菜单
+  navigateToFirstLeftMenu(authStore.mixLeftMenuList) // 跳转到左侧第一个菜单
+}
 
-  const [firstMenu] = menus
-  // 如果有子菜单，则递归查找第一个可访问的子菜单
-  if (firstMenu.children && firstMenu.children.length > 0) {
-    navigateToFirstLeftMenu(firstMenu.children)
-    // 如果子菜单都不可访问，则跳转到第一个可访问的菜单
-  } else if (firstMenu.name) {
-    const params: { name: string | symbol; query?: LocationQueryRaw } = {
-      name: firstMenu.name
+// 跳转到左侧第一个可访问的菜单
+const navigateToFirstLeftMenu = (menus: Menu.RouteVO[]) => {
+  for (const menu of menus) {
+    // 如果当前菜单有子菜单，递归处理第一个子菜单
+    if (menu.children && menu.children.length > 0) {
+      navigateToFirstLeftMenu(menu.children)
+      return
+      // 如果当前菜单是叶子节点，跳转到该菜单
+    } else if (menu.name) {
+      router.push({
+        name: menu.name,
+        query:
+          typeof menu.meta?.params === 'object'
+            ? (menu.meta.params as unknown as LocationQueryRaw)
+            : undefined
+      })
+      return
     }
-    if (isObject(firstMenu.meta?.params)) {
-      params.query = firstMenu.meta.params as LocationQueryRaw
-    }
-    router.push(params)
   }
 }
 
+// 初始化顶部菜单
 onMounted(() => {
-  topMenus.value = authStore.routes.filter((item) => !item.meta || !item.meta.hidden)
+  topMenus.value = authStore.authMenuList.filter((item) => !item.meta?.isHide)
+  initializeActiveTopMenuPath()
 })
 </script>

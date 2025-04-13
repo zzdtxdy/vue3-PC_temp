@@ -1,12 +1,13 @@
-<!-- 菜单组件 -->
 <template>
+  <!-- 菜单组件 -->
   <el-menu
     ref="menuRef"
     :default-active="currentRoute.path"
     :collapse="!appStore.sidebar.opened"
-    :background-color="variables['menu-background']"
-    :text-color="variables['menu-text']"
-    :active-text-color="variables['menu-active-text']"
+    :background-color="menuBackgroundColor"
+    :text-color="menuTextColor"
+    :active-text-color="menuActiveTextColor"
+    :popper-effect="theme"
     :unique-opened="false"
     :collapse-transition="false"
     :mode="menuMode"
@@ -14,68 +15,59 @@
     @close="onMenuClose"
   >
     <!-- 菜单项 -->
-    <SidebarMenuItem
-      v-for="route in menuList"
-      :key="route.path"
-      :item="route"
-      :base-path="resolveFullPath(route.path)"
-    />
+    <SidebarMenuItem v-for="route in menuList" :key="route.path" :item="route" />
   </el-menu>
 </template>
 
 <script lang="ts" setup>
 import path from 'path-browserify'
 import type { MenuInstance } from 'element-plus'
+import type { RouteRecordRaw } from 'vue-router'
 
-import { LayoutEnum } from '@/enums/LayoutEnum'
-import { useSettingsStore, useGlobalStoreHook } from '@/store'
+import SidebarMenuItem from './SidebarMenuItem.vue'
+import { LayoutEnum } from '@/enums/settings/LayoutEnum'
+import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
+import { useAppStore } from '@/store'
 import { isExternal } from '@/utils/index'
 
-import variables from '@/styles/variables.module.scss'
+import variables from '@/styles/var.module.scss'
 
 const props = defineProps({
   menuList: {
-    type: Array<any>,
-    required: true,
+    type: Array<Menu.RouteVO>,
     default: () => []
-  },
-  basePath: {
-    type: String,
-    required: true,
-    example: '/system'
   }
 })
 
 const menuRef = ref<MenuInstance>()
-const settingsStore = useSettingsStore()
-const appStore = useGlobalStoreHook()
+const appStore = useAppStore()
 const currentRoute = useRoute()
 
 // 存储已展开的菜单项索引
 const expandedMenuIndexes = ref<string[]>([])
 
-// 根据布局模式设置菜单的显示方式：顶部布局使用水平模式，其他使用垂直模式
-const menuMode = computed(() => {
-  return settingsStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'
-})
+// 动态计算菜单模式：顶部布局使用水平模式，其他使用垂直模式
+const menuMode = computed(() => (appStore.layout === LayoutEnum.TOP ? 'horizontal' : 'vertical'))
 
-/**
- * 获取完整路径
- *
- * @param routePath 当前路由的相对路径  /user
- * @returns 完整的绝对路径 D://vue3-element-admin/system/user
- */
-function resolveFullPath(routePath: string) {
-  if (isExternal(routePath)) {
-    return routePath
-  }
-  if (isExternal(props.basePath)) {
-    return props.basePath
-  }
+// 动态获取主题
+const theme = computed(() => (appStore.isDark ? ThemeMode.DARK : ThemeMode.LIGHT))
 
-  // 解析路径，生成完整的绝对路径
-  return path.resolve(props.basePath, routePath)
-}
+// 动态获取菜单样式
+const menuBackgroundColor = computed(() =>
+  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-background']
+    : undefined
+)
+const menuTextColor = computed(() =>
+  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-text']
+    : undefined
+)
+const menuActiveTextColor = computed(() =>
+  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
+    ? variables['menu-active-text']
+    : undefined
+)
 
 /**
  * 打开菜单
@@ -83,7 +75,9 @@ function resolveFullPath(routePath: string) {
  * @param index 当前展开的菜单项索引
  */
 const onMenuOpen = (index: string) => {
-  expandedMenuIndexes.value.push(index)
+  if (!expandedMenuIndexes.value.includes(index)) {
+    expandedMenuIndexes.value.push(index)
+  }
 }
 
 /**
@@ -98,14 +92,13 @@ const onMenuClose = (index: string) => {
 /**
  * 监听菜单模式变化：当菜单模式切换为水平模式时，关闭所有展开的菜单项，
  * 避免在水平模式下菜单项显示错位。
- *
- * @see https://gitee.com/youlaiorg/vue3-element-admin/issues/IAJ1DR
  */
 watch(
   () => menuMode.value,
-  () => {
-    if (menuMode.value === 'horizontal') {
-      expandedMenuIndexes.value.forEach((item) => menuRef.value!.close(item))
+  (newMode) => {
+    if (newMode === 'horizontal') {
+      expandedMenuIndexes.value.forEach((item) => menuRef.value?.close(item))
+      expandedMenuIndexes.value = []
     }
   }
 )

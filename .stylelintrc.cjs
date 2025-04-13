@@ -18,6 +18,8 @@ module.exports = {
     }
   ],
   rules: {
+    "scss/at-rule-no-unknown": true, // 允许 SCSS 特有的规则
+    "scss/dollar-variable-no-missing-interpolation": true, // 禁止缺少插值的变量
     'scss/double-slash-comment-empty-line-before': ['never'],
     'function-url-quotes': 'always', // URL 的引号 "always(必须加上引号)"|"never(没有引号)"
     'color-hex-length': 'long', // 指定 16 进制颜色的简写或扩写 "short(16进制简写)"|"long(16进制扩写)"
@@ -34,7 +36,7 @@ module.exports = {
     'selector-pseudo-class-no-unknown': [
       true,
       {
-        ignorePseudoClasses: ['global', 'v-deep', 'deep']
+        ignorePseudoClasses: ['global', 'v-deep', 'deep','export', 'include', 'content', 'local']
       }
     ],
     // 允许未知规则
@@ -42,6 +44,7 @@ module.exports = {
       true,
       {
         ignoreAtRules: [
+          'export',
           'extend',
           'at-root',
           'debug',

@@ -1,66 +1,49 @@
-import { staticRouter } from '@/router/modules/staticRouter'
+/*
+ * @Description: 路由菜单 按钮角色权限
+ * @Author: zhongzd
+ * @Date: 2024-08-16 20:10:27
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-04-05 23:11:40
+ * @FilePath: \vue3-PC_temp\src\store\modules\auth.ts
+ */
 import { getFlatMenuList, getShowMenuList } from '@/utils'
 import store from '@/store'
 import router from '@/router'
 
 import MenuAPI from '@/api/menu'
-import { RouteRecordRaw } from 'vue-router'
-const modules = import.meta.glob('../../views/**/**.vue')
-const Layout = () => import('@/layout/index.vue')
 
 export const useAuthStore = defineStore('auth', () => {
   // 权限
   const perms = ref<string[]>([])
   // 角色
   const roles = ref<string[]>([])
-  // 所有路由，包括静态和动态路由
-  const routes = ref<Menu.RouteVO[]>([])
+  // 菜单权限列表 动态路由
+  const authMenuList = ref<Menu.RouteVO[]>([])
+
   // 混合模式左侧菜单路由
-  const mixedLayoutLeftRoutes = ref<Menu.RouteVO[]>([])
-  // 路由是否加载完成
-  const isRoutesLoaded = ref(false)
+  const mixLeftMenuList = ref<Menu.RouteVO[]>([])
 
   // 菜单权限列表 ==> 扁平化之后的一维数组菜单
-  const flatMenuListGet = computed(() => getFlatMenuList(routes.value))
+  const flatMenuListGet = computed(() => getFlatMenuList(authMenuList.value))
+
+  // 菜单权限列表 ==> 扁平化之后的一维数组菜单
+  const showMenuListGet = computed(() => getShowMenuList(authMenuList.value))
   /**
    * 生成动态路由
    */
-  const generateRoutes = () => {
-    return new Promise<Menu.RouteVO[]>((resolve, reject) => {
-      MenuAPI.getRoutes()
-        .then((data) => {
-          // 转换路由数据为组件
-          const dynamicRoutes: Menu.RouteVO[] = parseDynamicRoutes(data)
-          // 包括静态和动态路由
-          routes.value = [...staticRouter, ...dynamicRoutes] as Menu.RouteVO[]
-          isRoutesLoaded.value = true
-          resolve(dynamicRoutes)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
-  }
-  /** 判断是否有权限 */
-  function hasAuth(value: string | string[], type: 'button' | 'role' = 'button') {
-    // 超级管理员 拥有所有权限
-    if (type === 'button' && roles.value.includes('ROOT')) {
-      return true
-    }
-    const auths = type === 'button' ? perms.value : roles.value
-    return typeof value === 'string'
-      ? auths.includes(value)
-      : value.some((perm) => auths.includes(perm))
+  const getAuthMenuList = async () => {
+    const data = await MenuAPI.getRoutes()
+    authMenuList.value = data
   }
   /**
    * 根据父菜单路径设置混合模式左侧菜单
    *
    * @param parentPath 父菜单的路径，用于查找对应的菜单项
    */
-  const setMixedLayoutLeftRoutes = (parentPath: string) => {
-    const matchedItem = routes.value.find((item) => item.path === parentPath)
+  const setMixLeftMenuList = (parentPath: string) => {
+    const matchedItem = authMenuList.value.find((item) => item.path === parentPath)
     if (matchedItem && matchedItem.children) {
-      mixedLayoutLeftRoutes.value = matchedItem.children
+      mixLeftMenuList.value = matchedItem.children
     }
   }
 
@@ -69,16 +52,13 @@ export const useAuthStore = defineStore('auth', () => {
    * */
   const resetRouter = () => {
     // 删除动态路由，保留静态路由
-    routes.value.forEach((route) => {
-      if (route.name && !staticRouter.find((r: any) => r.name === route.name)) {
-        // 从 router 实例中移除动态路由
-        router.removeRoute(route.name)
-      }
+    authMenuList.value.forEach((route) => {
+      const { name } = route
+      if (name && router.hasRoute(name)) router.removeRoute(name)
     })
     // 清空本地存储的路由和菜单数据
-    routes.value = []
-    mixedLayoutLeftRoutes.value = []
-    isRoutesLoaded.value = false
+    authMenuList.value = []
+    mixLeftMenuList.value = []
   }
   function setPerms(val: string[]) {
     perms.value = val
@@ -87,40 +67,19 @@ export const useAuthStore = defineStore('auth', () => {
     roles.value = val
   }
   return {
-    routes,
-    generateRoutes,
-    mixedLayoutLeftRoutes,
-    setMixedLayoutLeftRoutes,
-    isRoutesLoaded,
+    authMenuList,
+    getAuthMenuList,
+    mixLeftMenuList,
+    setMixLeftMenuList,
     resetRouter,
-    hasAuth,
     flatMenuListGet,
+    showMenuListGet,
     setPerms,
     setRoles,
     roles,
     perms
   }
 })
-const loadComponent = (componentName: string) => {
-  return modules[`../../views/${componentName}.vue`] || modules['../../views/error-page/404.vue']
-}
-/**
- * 转换路由数据为组件
- */
-const parseDynamicRoutes = (routes: Menu.RouteVO[]): Menu.RouteVO[] => {
-  return routes.map((route: Menu.RouteVO) => {
-    const tmpRoute = { ...route }
-    // 顶级目录，替换为 Layout 组件
-    tmpRoute.component =
-      tmpRoute.component?.toString() === 'Layout' ? Layout : loadComponent(tmpRoute.component)
-
-    if (route.children) {
-      tmpRoute.children = parseDynamicRoutes(route.children)
-    }
-
-    return tmpRoute
-  })
-}
 
 /**
  * 在组件外使用 Pinia store 实例 @see https://pinia.vuejs.org/core-concepts/outside-component-usage.html

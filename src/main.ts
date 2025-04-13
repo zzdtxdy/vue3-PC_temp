@@ -10,6 +10,7 @@ import pinia from '@/store'
 import I18n from '@/lang/index'
 // element icons
 import * as Icons from '@element-plus/icons-vue'
+import '@/styles/element.scss';
 // element dark css
 import 'element-plus/theme-chalk/dark/css-vars.css'
 // custom dark css

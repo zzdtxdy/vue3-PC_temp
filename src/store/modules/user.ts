@@ -1,9 +1,10 @@
+import { getToken } from '@/utils/auth'
 /*
  * @Description: 用户信息
  * @Author: zhongzd
  * @Date: 2024-08-05 09:18:21
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-31 17:46:26
+ * @LastEditTime: 2025-04-05 18:04:37
  * @FilePath: \vue3-PC_temp\src\store\modules\user.ts
  */
 import { useStorage } from '@vueuse/core'
@@ -11,7 +12,6 @@ import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
 import store from '@/store'
 
-import { TOKEN_KEY } from '@/enums/CacheEnum'
 import { defineStore } from 'pinia'
 import { clearToken } from '@/utils/auth'
 import { useAuthStore } from '@/store/modules/auth'
@@ -97,6 +97,9 @@ export const useUserStore = defineStore('user', () => {
         .catch((error: any) => {
           console.log(' refreshToken  刷新失败', error)
           reject(error)
+        })
+        .finally(() => {
+          console.log(' refreshToken  刷新完成')
         })
     })
   }

@@ -45,9 +45,9 @@ declare global {
     /** 页签图标 */
     icon?: string
     /** 是否固定页签 */
-    affix?: boolean
+    isAffix?: boolean
     /** 是否开启缓存 */
-    keepAlive?: boolean
+    isKeepAlive?: boolean
     /** 路由查询参数 */
     query?: any
   }
@@ -65,11 +65,13 @@ declare global {
     /** 是否固定头部 */
     fixedHeader: boolean
     /** 是否显示多标签导航 */
-    tagsView: boolean
+    tabsView: boolean
+    /** 是否 显示多标签导航图标 */
+    tabsIcon: boolean
     // /** 是否显示侧边栏Logo */
     // sidebarLogo: boolean
     /** 导航栏布局(left|top|mix) */
-    layout: string
+    layout: 'left' | 'top' | 'mix'
     /** 主题颜色 */
     themeColor: string
     /** 主题模式(是否暗黑) */
@@ -84,11 +86,15 @@ declare global {
     watermarkContent: string
     /** 设备类型desktop|mobile */
     device: string
+    /** 激活的顶部菜单路径 */
+    activeTopMenuPath: string
     sidebar: {
-      isOpened: boolean // 侧边栏状态
+      opened: boolean // 侧边栏状态
       isLogo: boolean /** 是否显示侧边栏Logo */
       withoutAnimation: boolean // 侧边栏展开收起时是否有动画
     }
+    /** 侧边栏配色方案 */
+    sidebarColorScheme: 'classic-blue' | 'minimal-white'
   }
 
   /**
@@ -119,9 +125,9 @@ declare global {
       /** 路由额外属性 */
       meta?: Meta
       /** 路由名称 */
-      name?: string
+      name: string
       /** 路由路径 */
-      path?: string
+      path: string
       /** 跳转链接 */
       redirect?: string
     }
@@ -144,28 +150,21 @@ declare global {
        * true 隐藏, false 显示
        * @default false
        */
-      hidden?: boolean
-
-      /**
-       * 始终显示父级菜单，即使只有一个子菜单
-       * true 显示父级菜单, false 隐藏父级菜单，显示唯一子节点
-       * @default false
-       */
-      alwaysShow?: boolean
+      isHide?: boolean
 
       /**
        * 是否固定在页签上
        * true 固定, false 不固定
        * @default false
        */
-      affix?: boolean
+      isAffix?: boolean
 
       /**
        * 是否缓存页面
        * true 缓存, false 不缓存
        * @default false
        */
-      keepAlive?: boolean
+      isKeepAlive?: boolean
 
       /**
        * 是否在面包屑导航中隐藏
@@ -241,7 +240,7 @@ declare global {
       /** 权限标识 */
       perm?: string
       /** 【菜单】是否开启页面缓存 */
-      keepAlive?: number
+      isKeepAlive?: number
       /** 【目录】只有一个子路由是否始终显示 */
       alwaysShow?: number
       /** 参数 */

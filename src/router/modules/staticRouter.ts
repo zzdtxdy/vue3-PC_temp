@@ -1,3 +1,11 @@
+/*
+ * @Description:静态路由
+ * @Author: zhongzd
+ * @Date: 2024-08-10 13:12:03
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-04-12 23:30:48
+ * @FilePath: \vue3-PC_temp\src\router\modules\staticRouter.ts
+ */
 import { HOME_URL } from '@/settings'
 import { RouteRecordRaw } from 'vue-router'
 
@@ -8,7 +16,7 @@ export const staticRouter: RouteRecordRaw[] = [
   {
     path: '/redirect',
     component: Layout,
-    meta: { hidden: true },
+    meta: { isHide: true },
     children: [
       {
         path: '/redirect/:path(.*)', // 匹配 /redirect 后面跟随的任何路径
@@ -20,7 +28,7 @@ export const staticRouter: RouteRecordRaw[] = [
   {
     path: '/login',
     component: () => import('@/views/login/index.vue'),
-    meta: { hidden: true }
+    meta: { isHide: true }
   },
   {
     path: '/layout',
@@ -33,21 +41,21 @@ export const staticRouter: RouteRecordRaw[] = [
     path: '/',
     name: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: HOME_URL,
     children: [
-      {
-        path: HOME_URL,
-        component: () => import('@/views/dashboard/index.vue'),
-        // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
-        // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
-        name: 'Dashboard',
-        meta: {
-          title: '首页',
-          icon: 'homepage',
-          affix: true,
-          keepAlive: true
-        }
-      }
+      // {
+      //   path: HOME_URL,
+      //   component: () => import('@/views/dashboard/index.vue'),
+      //   // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
+      //   // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
+      //   name: 'home',
+      //   meta: {
+      //     title: '首页',
+      //     icon: 'homepage',
+      //     isAffix: true,
+      //     isKeepAlive: true
+      //   }
+      // }
     ]
   }
 
@@ -62,46 +70,6 @@ export const staticRouter: RouteRecordRaw[] = [
   //     },
   //   ],
   // },
-  // 多级嵌套路由
-  /* {
-         path: '/nested',
-         component: Layout,
-         redirect: '/nested/level1/level2',
-         name: 'Nested',
-         meta: {title: '多级菜单', icon: 'nested'},
-         children: [
-             {
-                 path: 'level1',
-                 component: () => import('@/views/nested/level1/index.vue'),
-                 name: 'Level1',
-                 meta: {title: '菜单一级'},
-                 redirect: '/nested/level1/level2',
-                 children: [
-                     {
-                         path: 'level2',
-                         component: () => import('@/views/nested/level1/level2/index.vue'),
-                         name: 'Level2',
-                         meta: {title: '菜单二级'},
-                         redirect: '/nested/level1/level2/level3',
-                         children: [
-                             {
-                                 path: 'level3-1',
-                                 component: () => import('@/views/nested/level1/level2/level3/index1.vue'),
-                                 name: 'Level3-1',
-                                 meta: {title: '菜单三级-1'}
-                             },
-                             {
-                                 path: 'level3-2',
-                                 component: () => import('@/views/nested/level1/level2/level3/index2.vue'),
-                                 name: 'Level3-2',
-                                 meta: {title: '菜单三级-2'}
-                             }
-                         ]
-                     }
-                 ]
-             },
-         ]
-     }*/
 ]
 
 /**
@@ -109,27 +77,19 @@ export const staticRouter: RouteRecordRaw[] = [
  */
 export const errorRouter = [
   {
-    path: '/401',
-    name: '401',
-    component: () => import('@/views/error/401.vue'),
+    path: "/401",
+    name: "401",
+    component: () => import("@/views/error/401.vue"),
     meta: {
-      title: '401页面',
-      hidden: true
+      title: "401页面"
     }
   },
   {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/error/404.vue'),
+    path: "/404",
+    name: "404",
+    component: () => import("@/views/error/404.vue"),
     meta: {
-      title: '404页面',
-      hidden: true
+      title: "404页面"
     }
   },
-  // 是一种路径参数匹配模式，用于捕获所有未匹配的路径
-  /* :pathMatch 是一个动态路径参数表示在 URL 中匹配相应部分的任意值，(.*) 是一个正则表达式，表示匹配任意字符，* 表示可以匹配任意长度。 */
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/404'
-  }
 ]

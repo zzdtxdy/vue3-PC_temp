@@ -1,48 +1,47 @@
+<!--
+ * @Description: 
+ * @Author: zhongzd
+ * @Date: 2025-02-08 21:35:29
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-04-13 22:38:58
+ * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\components\SidebarMenuItem.vue
+-->
 <template>
-  <div v-if="!item.meta || !item.meta.hidden">
-    <!--【叶子节点】显示叶子节点或唯一子节点且父节点未配置始终显示 -->
-    <template
-      v-if="
-        // 未配置始终显示，使用唯一子节点替换父节点显示为叶子节点
-        (!item.meta?.alwaysShow &&
-          hasOneShowingChild(item.children, item) &&
-          (!onlyOneChild.children || onlyOneChild.noShowingChildren)) ||
-        // 即使配置了始终显示，但无子节点，也显示为叶子节点
-        (item.meta?.alwaysShow && !item.children)
-      "
-    >
+  <div v-if="!item.meta || !item.meta.isHide">
+    <!-- 如果路径为 '/'，只渲染子节点 -->
+    <template v-if="item.path === '/'">
+      <SidebarMenuItem v-for="child in item.children" :key="child.path" :item="child" />
+    </template>
+
+    <!-- 渲染叶子节点 -->
+    <template v-else-if="isLeafNode">
       <AppLink
-        v-if="onlyOneChild.meta"
+        v-if="item.meta"
         :to="{
-          path: resolvePath(onlyOneChild.path),
-          query: onlyOneChild.meta.params
+          path: item.path,
+          query: item.meta.params
         }"
       >
-        <el-menu-item
-          :index="resolvePath(onlyOneChild.path)"
-          :class="{ 'submenu-title-noDropdown': !isNest }"
-        >
+        <el-menu-item :index="item.path">
           <SidebarMenuItemTitle
-            :icon="onlyOneChild.meta.icon || item.meta?.icon"
-            :title="onlyOneChild.meta.title"
+            :icon="String(item.meta?.icon || '')"
+            :title="String(item.meta?.title || '')"
           />
         </el-menu-item>
       </AppLink>
     </template>
 
-    <!--【非叶子节点】显示含多个子节点的父菜单，或始终显示的单子节点 -->
-    <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
+    <!-- 渲染非叶子节点 -->
+    <el-sub-menu v-else :index="item.path" teleported>
       <template #title>
-        <SidebarMenuItemTitle v-if="item.meta" :icon="item.meta.icon" :title="item.meta.title" />
+        <SidebarMenuItemTitle
+          v-if="item.meta"
+          :icon="String(item.meta?.icon || '')"
+          :title="String(item.meta?.title || '')"
+        />
       </template>
 
-      <SidebarMenuItem
-        v-for="child in item.children"
-        :key="child.path"
-        :is-nest="true"
-        :item="child"
-        :base-path="resolvePath(child.path)"
-      />
+      <SidebarMenuItem v-for="child in item.children" :key="child.path" :item="child" />
     </el-sub-menu>
   </div>
 </template>
@@ -53,141 +52,50 @@ defineOptions({
   inheritAttrs: false
 })
 
-import path from 'path-browserify'
-import { RouteRecordRaw } from 'vue-router'
-
-import { isExternal } from '@/utils'
+import AppLink from '@/components/AppLink/index.vue'
+import SidebarMenuItemTitle from './SidebarMenuItemTitle.vue'
 
 const props = defineProps({
   /**
    * 当前路由对象
    */
   item: {
-    type: Object as PropType<RouteRecordRaw>,
+    type: Object,
     required: true
-  },
-
-  /**
-   * 父级完整路径
-   */
-  basePath: {
-    type: String,
-    required: true
-  },
-
-  /**
-   * 是否为嵌套路由
-   */
-  isNest: {
-    type: Boolean,
-    default: false
   }
 })
 
-// 可见的唯一子节点
-const onlyOneChild = ref()
-
 /**
- * 检查是否仅有一个可见子节点
- *
- * @param children 子路由数组
- * @param parent 父级路由
- * @returns 是否仅有一个可见子节点
+ * 判断是否为叶子节点
  */
-function hasOneShowingChild(children: RouteRecordRaw[] = [], parent: RouteRecordRaw) {
-  // 过滤出可见子节点
-  const showingChildren = children.filter((route: RouteRecordRaw) => {
-    if (!route.meta?.hidden) {
-      onlyOneChild.value = route
-      return true
-    }
-    return false
-  })
-
-  // 仅有一个节点
-  if (showingChildren.length === 1) {
-    return true
-  }
-
-  // 无子节点时
-  if (showingChildren.length === 0) {
-    // 父节点设置为唯一显示节点，并标记为无子节点
-    onlyOneChild.value = { ...parent, path: '', noShowingChildren: true }
-    return true
-  }
-  return false
-}
-
-/**
- * 获取完整路径，适配外部链接
- *
- * @param routePath 路由路径
- * @returns 绝对路径
- */
-function resolvePath(routePath: string) {
-  if (isExternal(routePath)) return routePath
-  if (isExternal(props.basePath)) return props.basePath
-
-  // 拼接父路径和当前路径
-  return path.resolve(props.basePath, routePath)
-}
+const isLeafNode = computed(() => {
+  // 过滤掉 `isHide` 为 `true` 的子节点
+  const visibleChildren = props.item.children?.filter((child: any) => !child.meta?.isHide) || []
+  return visibleChildren.length === 0
+})
 </script>
 
 <style lang="scss">
-.hideSidebar {
-  .submenu-title-noDropdown {
-    position: relative;
-    padding: 0 !important;
-
-    .el-tooltip {
-      padding: 0 !important;
-
-      .sub-el-icon {
-        margin-left: 19px;
-      }
-    }
-
-    & > span {
-      display: inline-block;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
-  }
-
-  .el-sub-menu {
-    overflow: hidden;
-
-    & > .el-sub-menu__title {
-      padding: 0 !important;
-
-      .sub-el-icon {
-        margin-left: 19px;
-      }
-
-      .el-sub-menu__icon-arrow {
-        display: none;
-      }
-    }
-  }
-
-  .el-menu--collapse {
-    width: $sidebar-width-collapsed;
-
-    .el-sub-menu {
-      & > .el-sub-menu__title > span {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        visibility: hidden;
-      }
+.el-sub-menu .el-sub-menu__title:hover {
+  color: $menu-text;
+  background-color: $menu-hover;
+}
+.el-menu--collapse {
+  .is-active {
+    .el-sub-menu__title {
+      color: $menu-active-text !important;
+      background-color: $menu-active-background !important;
     }
   }
 }
-
-.el-menu-item:hover {
-  background-color: $menu-hover;
+.el-menu-item {
+  &:hover {
+    color: $menu-text;
+    background-color: $menu-hover;
+  }
+  &.is-active {
+    color: $menu-active-text !important;
+    background-color: $menu-active-background !important;
+  }
 }
 </style>

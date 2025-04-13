@@ -3,21 +3,21 @@
  * @Author: zhongzd
  * @Date: 2024-08-25 19:52:03
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-01-09 13:13:45
+ * @LastEditTime: 2025-03-23 10:44:30
  * @FilePath: \vue3-PC_temp\src\hooks\useTheme.ts
  */
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import defaultSettings from '@/settings'
-import { useGlobalStoreHook } from '@/store/modules/global'
+import { useAppStoreHook } from '@/store/modules/app'
 import { modifyAlpha } from '@/utils'
 
 /**
  * @description 全局主题 hooks
  * */
 export const useTheme = () => {
-  const globalStore = useGlobalStoreHook()
-  const { isDark } = storeToRefs(globalStore)
+  const appStore = useAppStoreHook()
+  const { isDark } = storeToRefs(appStore)
 
   /**
    * @description: 切换暗黑模式
@@ -54,7 +54,7 @@ export const useTheme = () => {
         `${modifyAlpha(newThemeColor, 1 - i * 0.1)}`
       )
     }
-    globalStore.setGlobalState('themeColor', newThemeColor)
+    appStore.setGlobalState('themeColor', newThemeColor)
   }
 
   return {
