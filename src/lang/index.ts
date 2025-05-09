@@ -8,7 +8,7 @@
  */
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
-import { useAppStoreHook } from '@/store/modules/app'
+import { useAppStoreHook } from '@/stores/modules/app'
 // 本地语言包
 import enLocale from './modules/en.json'
 import zhCnLocale from './modules/zh.json'

@@ -10,11 +10,11 @@ import { getToken } from '@/utils/auth'
 import { useStorage } from '@vueuse/core'
 import AuthAPI, { LoginData } from '@/api/auth'
 import UserAPI, { UserInfo } from '@/api/user'
-import store from '@/store'
+import store from '@/stores'
 
 import { defineStore } from 'pinia'
 import { clearToken } from '@/utils/auth'
-import { useAuthStore } from '@/store/modules/auth'
+import { useAuthStore } from '@/stores/modules/auth'
 import { getRefreshToken, setRefreshToken, setToken } from '@/utils/auth'
 export const useUserStore = defineStore('user', () => {
   // 用户信息 useStorage用于将响应式状态与浏览器的存储（如 localStorage 或 sessionStorage）同步

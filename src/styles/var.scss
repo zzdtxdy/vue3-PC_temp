@@ -46,6 +46,11 @@
 $font-size-base: 14px; // 基本字体大小
 $font-size-small: 12px;
 $font-size-large: 16px;
+$font-size-h1: 32px; // 标题字体大小
+$font-size-h2: 28px;
+$font-size-h3: 24px;
+$font-size-h4: 20px;
+$font-size-h5: 18px;
 
 /* Borders */
 $border-width: 1px;
@@ -62,9 +67,9 @@ $spacing-unit: 8px; // 基本间距单位
 
 $spacing-xs: $spacing-unit * 0.5; // 4px
 $spacing-sm: $spacing-unit; // 8px
-$spacing-md: $spacing-unit * 2; // 16px
-$spacing-lg: $spacing-unit * 3; // 24px
-$spacing-xl: $spacing-unit * 4; // 32px
+$spacing-md: $spacing-unit * 1.5; // 12px
+$spacing-lg: $spacing-unit * 2.5; // 20px
+$spacing-xl: $spacing-unit * 3.5; // 28px
 
 /* menu */
 $menu-background: var(--menu-background); // 菜单背景色
@@ -75,6 +80,6 @@ $menu-hover: var(--menu-hover); // 菜单悬停背景色
 $sidebar-logo-background: var(--sidebar-logo-background); // 侧边栏 Logo 背景色
 $sidebar-logo-text: var(--sidebar-logo-text); // 侧边栏 Logo 文字颜色
 $sidebar-width: 210px; // 侧边栏宽度
-$sidebar-width-collapsed: 54px; // 侧边栏收缩宽度
+$sidebar-width-collapsed: 65px; // 侧边栏收缩宽度
 $navbar-height: 50px; // 导航栏高度
 $tabs-view-height: 40px; // TabsView 高度

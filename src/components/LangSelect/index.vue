@@ -28,9 +28,9 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useAppStoreHook } from '@/store/modules/app'
+import { useAppStoreHook } from '@/stores/modules/app'
 import { LanguageEnum } from '@/enums/settings/LanguageEnum'
-import { LanguageType } from '@/store/interface'
+import { LanguageType } from '@/stores/interface'
 const emit = defineEmits(['resetForm'])
 const { size } = defineProps({
   size: {

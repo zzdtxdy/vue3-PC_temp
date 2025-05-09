@@ -1,7 +1,16 @@
+<!--
+ * @Description: 侧边栏菜单
+ * @Author: zhongzd
+ * @Date: 2025-02-08 21:35:29
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-05-02 21:21:18
+ * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\components\SidebarMenu.vue
+-->
 <template>
   <!-- 菜单组件 -->
   <el-menu
     ref="menuRef"
+    :router="false"
     :default-active="currentRoute.path"
     :collapse="!appStore.sidebar.opened"
     :background-color="menuBackgroundColor"
@@ -15,20 +24,17 @@
     @close="onMenuClose"
   >
     <!-- 菜单项 -->
-    <SidebarMenuItem v-for="route in menuList" :key="route.path" :item="route" />
+    <SidebarMenuItem v-for="route in menuList" :key="route.path" :menuItem="route" />
   </el-menu>
 </template>
 
 <script lang="ts" setup>
-import path from 'path-browserify'
 import type { MenuInstance } from 'element-plus'
-import type { RouteRecordRaw } from 'vue-router'
 
 import SidebarMenuItem from './SidebarMenuItem.vue'
 import { LayoutEnum } from '@/enums/settings/LayoutEnum'
 import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
-import { useAppStore } from '@/store'
-import { isExternal } from '@/utils/index'
+import { useAppStore } from '@/stores'
 
 import variables from '@/styles/var.module.scss'
 
@@ -54,19 +60,13 @@ const theme = computed(() => (appStore.isDark ? ThemeMode.DARK : ThemeMode.LIGHT
 
 // 动态获取菜单样式
 const menuBackgroundColor = computed(() =>
-  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
-    ? variables['menu-background']
-    : undefined
+  theme.value === ThemeMode.DARK ? variables['menu-background'] : undefined
 )
 const menuTextColor = computed(() =>
-  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
-    ? variables['menu-text']
-    : undefined
+  theme.value === ThemeMode.DARK ? variables['menu-text'] : undefined
 )
 const menuActiveTextColor = computed(() =>
-  theme.value === ThemeMode.DARK || appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE
-    ? variables['menu-active-text']
-    : undefined
+  theme.value === ThemeMode.DARK ? variables['menu-active-text'] : undefined
 )
 
 /**
@@ -103,3 +103,8 @@ watch(
   }
 )
 </script>
+<style lang="scss" scoped>
+.el-menu {
+  width: 100%;
+}
+</style>

@@ -3,64 +3,55 @@
  * @Author: zhongzd
  * @Date: 2025-02-08 21:35:29
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-13 22:38:58
+ * @LastEditTime: 2025-05-04 23:41:40
  * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\components\SidebarMenuItem.vue
 -->
 <template>
-  <div v-if="!item.meta || !item.meta.isHide">
+  <template v-if="!menuItem.meta || !menuItem.meta.isHide">
     <!-- 如果路径为 '/'，只渲染子节点 -->
-    <template v-if="item.path === '/'">
-      <SidebarMenuItem v-for="child in item.children" :key="child.path" :item="child" />
+    <template v-if="menuItem.path === '/'">
+      <SidebarMenuItem v-for="child in menuItem.children" :key="child.path" :menuItem="child" />
     </template>
 
     <!-- 渲染叶子节点 -->
     <template v-else-if="isLeafNode">
-      <AppLink
-        v-if="item.meta"
-        :to="{
-          path: item.path,
-          query: item.meta.params
-        }"
-      >
-        <el-menu-item :index="item.path">
-          <SidebarMenuItemTitle
-            :icon="String(item.meta?.icon || '')"
-            :title="String(item.meta?.title || '')"
-          />
-        </el-menu-item>
-      </AppLink>
+      <el-menu-item :index="menuItem.path" @click="handleClickMenu(menuItem)">
+        <!-- 根据 icon 类型决定使用的不同类型的图标组件 -->
+        <MenuIcon :icon="menuItem.meta?.icon" style="margin-right: 5px" />
+        <template #title>
+          <span class="sle">{{ translateRouteTitle(menuItem.meta?.title || '') }}</span>
+        </template>
+      </el-menu-item>
     </template>
 
     <!-- 渲染非叶子节点 -->
-    <el-sub-menu v-else :index="item.path" teleported>
+    <el-sub-menu v-else :index="menuItem.path">
       <template #title>
-        <SidebarMenuItemTitle
-          v-if="item.meta"
-          :icon="String(item.meta?.icon || '')"
-          :title="String(item.meta?.title || '')"
-        />
+        <!-- 根据 icon 类型决定使用的不同类型的图标组件 -->
+        <MenuIcon :icon="menuItem.meta?.icon" style="margin-right: 5px" />
+        <span class="sle">{{ translateRouteTitle(menuItem.meta?.title || '') }}</span>
       </template>
 
-      <SidebarMenuItem v-for="child in item.children" :key="child.path" :item="child" />
+      <SidebarMenuItem v-for="child in menuItem.children" :key="child.path" :menuItem="child" />
     </el-sub-menu>
-  </div>
+  </template>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: 'SidebarMenuItem',
-  inheritAttrs: false
+  name: 'SidebarMenuItem'
 })
 
-import AppLink from '@/components/AppLink/index.vue'
-import SidebarMenuItemTitle from './SidebarMenuItemTitle.vue'
+import router from '@/router'
+import { translateRouteTitle } from '@/utils/i18n'
+import MenuIcon from '@/components/MenuIcon/index.vue' // 提取的图标组件
 
 const props = defineProps({
   /**
    * 当前路由对象
    */
-  item: {
-    type: Object,
+  menuItem: {
+    type: Object as PropType<Menu.RouteVO>,
     required: true
   }
 })
@@ -70,12 +61,16 @@ const props = defineProps({
  */
 const isLeafNode = computed(() => {
   // 过滤掉 `isHide` 为 `true` 的子节点
-  const visibleChildren = props.item.children?.filter((child: any) => !child.meta?.isHide) || []
+  const visibleChildren = props.menuItem.children?.filter((child: any) => !child.meta?.isHide) || []
   return visibleChildren.length === 0
 })
+const handleClickMenu = (menuItem: Menu.RouteVO) => {
+  if (menuItem?.meta?.isLink) return window.open(menuItem.meta.isLink, '_blank')
+  router.push(menuItem.path)
+}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-sub-menu .el-sub-menu__title:hover {
   color: $menu-text;
   background-color: $menu-hover;
@@ -87,6 +82,13 @@ const isLeafNode = computed(() => {
       background-color: $menu-active-background !important;
     }
   }
+}
+.el-menu-item [class^='el-icon'] {
+  width: 18px;
+  margin-right: 0;
+}
+.el-sub-menu .el-icon {
+  margin-right: 0;
 }
 .el-menu-item {
   &:hover {

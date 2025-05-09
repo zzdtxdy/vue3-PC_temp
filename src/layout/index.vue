@@ -4,6 +4,7 @@
     <div v-if="isMobile && isSidebarOpen" class="layout__overlay" @click="handleCloseSidebar" />
 
     <!-- 侧边栏 -->
+
     <Sidebar class="layout__sidebar" />
 
     <!-- 混合布局 -->
@@ -49,7 +50,7 @@ import Main from './components/Main/index.vue'
 import Sidebar from './components/Sidebar/index.vue'
 import TabsView from './components/TabsView/index.vue'
 // 状态管理
-import { useAppStore, useAuthStore } from '@/store'
+import { useAppStore, useAuthStore } from '@/stores'
 
 // 配置
 import defaultSettings from '@/settings'
@@ -129,6 +130,7 @@ function handleToggleSidebar() {
 </script>
 <style lang="scss" scoped>
 .layout {
+  display: flex;
   width: 100%;
   height: 100%;
   &__overlay {
@@ -141,27 +143,17 @@ function handleToggleSidebar() {
     background-color: rgb(0 0 0 / 30%);
   }
   &__sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
     z-index: 999;
     width: $sidebar-width;
     background-color: $menu-background;
-    transition: width 0.28s
+    transition: width 0.28s ease;
+    // will-change: width;
   }
   &__main {
-    position: relative;
+    flex: 1;
     height: 100%;
-    margin-left: $sidebar-width;
     overflow-y: auto;
-    transition: margin-left 0.28s;
-    .fixed-header {
-      position: sticky;
-      top: 0;
-      z-index: 9;
-      transition: width 0.28s;
-    }
+    transition: width 0.28s ease;
   }
 }
 // 占位符选择器
@@ -201,16 +193,11 @@ function handleToggleSidebar() {
     height: 100%;
     padding-top: $navbar-height;
     .layout__sidebar--left {
-      position: relative;
       width: $sidebar-width;
       height: 100%;
       background-color: var(--menu-background);
-      :deep(.el-scrollbar) {
-        height: calc(100vh - #{$navbar-height} - 50px);
-      }
       :deep(.el-menu) {
         height: 100%;
-        border: none;
       }
       .layout__sidebar-toggle {
         position: absolute;
@@ -226,29 +213,17 @@ function handleToggleSidebar() {
     }
     .layout__main {
       flex: 1;
-      min-width: 0;
-      margin-left: 0;
     }
   }
 }
 .hideSidebar {
-  &.layout-left {
-    .layout__main {
-      // margin-left: $sidebar-width-collapsed;
-    }
-  }
-  &.layout-top {
-    .layout__main {
-      margin-left: 0;
-    }
-  }
   &.layout-mix {
     .layout__sidebar {
       width: 100%;
     }
     .layout__container {
       .layout__sidebar--left {
-        // width: $sidebar-width-collapsed;
+        width: $sidebar-width-collapsed;
       }
     }
   }
@@ -258,22 +233,12 @@ function handleToggleSidebar() {
     .layout__sidebar {
       width: $sidebar-width-collapsed;
     }
-    .layout__main {
-      margin-left: $sidebar-width-collapsed;
-    }
     &.mobile {
       .layout__sidebar {
-        pointer-events: none;
-        transform: translate3d(calc(-1 * #{$sidebar-width}), 0, 0);
-        transition-duration: 0.3s;
+        // pointer-events: none;
+        // transform: translate3d(calc(-1 * #{$sidebar-width}), 0, 0);
+        // transition-duration: 0.3s;
       }
-      .layout__main {
-        margin-left: 0;
-      }
-    }
-  }
-  &.openSidebar {
-    &.mobile {
       .layout__main {
         margin-left: 0;
       }

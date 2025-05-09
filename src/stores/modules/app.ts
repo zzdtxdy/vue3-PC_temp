@@ -2,8 +2,8 @@ import defaultSettings from '@/settings'
 import { defineStore } from 'pinia'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
-import piniaPersistConfig from '@/store/persistConfig'
-import store from '@/store'
+import piniaPersistConfig from '@/stores/persistConfig'
+import store from '@/stores'
 import { LanguageType } from '../interface'
 import { SidebarColor } from '@/enums/settings/ThemeEnum'
 import { toggleSidebarColor } from '@/utils'
@@ -22,7 +22,10 @@ export const useAppStore = defineStore(
     const tabsView = ref(defaultSettings.tabsView)
     /** 是否 显示多标签导航图标 */
     const tabsIcon = ref(defaultSettings.tabsIcon)
-
+    /** 面包屑导航 */
+    const breadcrumb = ref(defaultSettings.breadcrumb)
+    /** 是否 显示面包屑导航图标 */
+    const breadcrumbIcon = ref(defaultSettings.breadcrumbIcon)
     /** 是否固定头部 */
     const fixedHeader = ref(defaultSettings.fixedHeader)
     /** 侧边栏配置 */
@@ -154,7 +157,9 @@ export const useAppStore = defineStore(
       openSideBar,
       tabsIcon,
       setGlobalState,
-      sidebarColorScheme
+      sidebarColorScheme,
+      breadcrumb,
+      breadcrumbIcon
     }
   },
   {

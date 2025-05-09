@@ -9,7 +9,7 @@
 import router from '@/router/index'
 import { RouteRecordRaw } from 'vue-router'
 import { ElNotification } from 'element-plus'
-import { useAuthStore } from '@/store/modules/auth'
+import { useAuthStore } from '@/stores/modules/auth'
 import { clearToken } from '@/utils/auth'
 
 // 引入 views 文件夹下所有 vue 文件

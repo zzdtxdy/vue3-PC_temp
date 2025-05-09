@@ -9,7 +9,7 @@
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import defaultSettings from '@/settings'
-import { useAppStoreHook } from '@/store/modules/app'
+import { useAppStoreHook } from '@/stores/modules/app'
 import { modifyAlpha } from '@/utils'
 
 /**

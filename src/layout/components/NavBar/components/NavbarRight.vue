@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import defaultSettings from '@/settings'
 import { DeviceEnum } from '@/enums/settings/DeviceEnum'
-import { useAppStore, useUserStore, useTabsViewStore } from '@/store'
+import { useAppStore, useUserStore, useTabsViewStore } from '@/stores'
 
 import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
 

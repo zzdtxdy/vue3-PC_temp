@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-04 12:48:49
+ * @LastEditTime: 2025-05-04 20:58:05
  * @FilePath: \vue3-PC_temp\src\utils\index.ts
  */
 /**
@@ -32,6 +32,40 @@ export function getShowMenuList(menuList: Menu.RouteVO[]) {
     }
     return !item.meta?.isHide
   })
+}
+
+/**
+ * @description 使用递归找出所有面包屑存储到 pinia/vuex 中
+ * @param {Array} menuList 菜单列表
+ * @param {Array} parent 父级菜单
+ * @param {Object} result 处理后的结果
+ * @returns {Object}
+ */
+export const getAllBreadcrumbList = (
+  menuList: Menu.RouteVO[],
+  parent = [],
+  result: { [key: string]: any } = {}
+) => {
+  for (const item of menuList) {
+    // 将当前菜单项的路径作为键，父级路径数组加上当前菜单项作为值
+    result[item.path] = [...parent, item]
+    // 如果当前菜单项有子菜单，则递归调用
+    if (item.children) getAllBreadcrumbList(item.children, result[item.path], result)
+  }
+  return result
+}
+/**
+ * @description 使用递归处理路由菜单 path，生成一维数组 (第一版本地路由鉴权会用到，该函数暂未使用)
+ * @param {Array} menuList 所有菜单列表
+ * @param {Array} menuPathArr 菜单地址的一维数组 ['**','**']
+ * @returns {Array}
+ */
+export function getMenuListPath(menuList: Menu.RouteVO[], menuPathArr: string[] = []): string[] {
+  for (const item of menuList) {
+    if (typeof item === 'object' && item.path) menuPathArr.push(item.path)
+    if (item.children?.length) getMenuListPath(item.children, menuPathArr)
+  }
+  return menuPathArr
 }
 
 /**

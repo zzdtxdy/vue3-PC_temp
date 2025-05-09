@@ -16,8 +16,8 @@ import {
 } from 'vue-router'
 import { errorRouter, staticRouter } from '@/router/modules/staticRouter'
 export const Layout = () => import('@/layout/index.vue')
-import { useAuthStore } from '@/store/modules/auth'
-import { useUserStore } from '@/store/modules/user'
+import { useAuthStore } from '@/stores/modules/auth'
+import { useUserStore } from '@/stores/modules/user'
 import NProgress from '@/utils/nprogress'
 import { WHITE_LIST } from '@/settings'
 import { getToken } from '@/utils/auth'

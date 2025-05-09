@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useTabsViewStore } from '@/store'
+import { useAppStore, useTabsViewStore } from '@/stores'
 import variables from '@/styles/var.module.scss'
 
 // 缓存页面集合
@@ -38,6 +38,8 @@ const appMainHeight = computed(() => {
 <style lang="scss" scoped>
 .app-main {
   position: relative;
+  box-sizing: border-box;
+  padding: $spacing-sm $spacing-md;
   overflow-y: auto;
   background-color: var(--el-bg-color-page);
 }

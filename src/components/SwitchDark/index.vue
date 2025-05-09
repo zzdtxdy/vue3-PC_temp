@@ -12,7 +12,7 @@
 
 <script setup lang="ts" name="SwitchDark">
 import { useTheme } from '@/hooks/useTheme'
-import { useAppStoreHook } from '@/store/modules/app'
+import { useAppStoreHook } from '@/stores/modules/app'
 const globalStore = useAppStoreHook()
 const { switchDark } = useTheme()
 watchEffect(switchDark)

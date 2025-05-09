@@ -3,8 +3,8 @@
 // import zhCn from 'element-plus/es/locale/lang/zh-cn'
 // import en from 'element-plus/es/locale/lang/en'
 // import { localGet, localSet } from '@/utils'
-// import piniaPersistConfig from '@/store/persistConfig'
-// import store from '@/store'
+// import piniaPersistConfig from '@/stores/persistConfig'
+// import store from '@/stores'
 
 // export const useGlobalStore = defineStore(
 //   'global',

@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Author: zhongzd
+ * @Date: 2024-07-06 21:04:59
+ * @LastEditors: zhongzd
+ * @LastEditTime: 2025-04-26 12:16:21
+ * @FilePath: \vue3-PC_temp\.stylelintrc.cjs
+ */
 // @see: https://stylelint.io
 
 module.exports = {
@@ -33,6 +41,7 @@ module.exports = {
     'no-descending-specificity': null, // 不允许较低特异性的选择器出现在覆盖较高特异性的选择器
     'value-keyword-case': null, // 解决在 scss 中使用 v-bind 大写单词报错
     'scss/dollar-variable-pattern': null,
+    'declaration-property-value-no-unknown': null, // 禁止未知的属性值
     'selector-pseudo-class-no-unknown': [
       true,
       {

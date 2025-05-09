@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2025-02-08 21:35:29
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-13 11:57:18
+ * @LastEditTime: 2025-05-02 13:42:48
  * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\components\SidebarMenuItemTitle.vue
 -->
 <template>
@@ -14,7 +14,7 @@
   <svg-icon v-else-if="icon" :name="icon" />
   <svg-icon v-else name="menu" />
   <!-- 菜单标题 -->
-  <span v-if="title" class="ml-1">{{ translateRouteTitle(title) }}</span>
+  <span v-if="title" class="ml-1 sle">{{ translateRouteTitle(title) }}</span>
 </template>
 
 <script setup lang="ts">
@@ -43,7 +43,7 @@ defineProps({
   .el-menu-item {
     .svg-icon,
     .sub-el-icon {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
   }
 }

@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-15 14:27:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-12 21:13:03
+ * @LastEditTime: 2025-05-03 11:53:21
  * @FilePath: \vue3-PC_temp\src\settings.ts
  */
 import { ComponentSize } from './enums/settings/LayoutEnum'
@@ -39,6 +39,10 @@ const defaultSettings: AppSettings = {
   tabsView: true,
   // 是否显示多标签导航图标
   tabsIcon: true,
+  // 是否显示面包屑导航
+  breadcrumb: true,
+  // 是否显示面包屑导航图标
+  breadcrumbIcon: true,
   // 是否固定头部
   fixedHeader: true,
   sidebar: {

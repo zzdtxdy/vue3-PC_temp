@@ -5,7 +5,7 @@ import directive from '@/directive'
 // vue Router
 import router from '@/router'
 // pinia store
-import pinia from '@/store'
+import pinia from '@/stores'
 // vue i18n
 import I18n from '@/lang/index'
 // element icons

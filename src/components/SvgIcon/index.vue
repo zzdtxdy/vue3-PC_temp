@@ -3,21 +3,23 @@
  * @Author: zhongzd
  * @Date: 2024-07-04 19:00:40
  * @LastEditors: zhongzd
- * @LastEditTime: 2024-08-21 13:39:48
- * @FilePath: \zzd\vue3-element-admin\src\components\SvgIcon\index.vue
+ * @LastEditTime: 2025-05-04 12:19:59
+ * @FilePath: \vue3-PC_temp\src\components\SvgIcon\index.vue
 -->
 <template>
-  <svg aria-hidden="true" class="svg-icon" :style="'width:' + size + ';height:' + size">
+  <svg aria-hidden="true" class="svg-icon" preserveAspectRatio="xMidYMid meet" :style="'width:' + size + ';height:' + size">
     <use :xlink:href="symbolId" :fill="color" />
   </svg>
 </template>
 
 <script setup lang="ts">
 const props = defineProps({
+   // 图标的前缀 ==> 非必传（默认为"icon"）
   prefix: {
     type: String,
     default: 'icon'
   },
+  // 图标的名称 ==> 必传
   name: {
     type: String,
     required: false,
@@ -42,7 +44,6 @@ const symbolId = computed(() => `#${props.prefix}-${props.name}`)
   width: 1em;
   height: 1em;
   overflow: hidden;
-  vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
   outline: none;
   fill: currentcolor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
 }

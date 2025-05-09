@@ -1,4 +1,4 @@
-import piniaPersistConfig from '@/store/persistConfig'
+import piniaPersistConfig from '@/stores/persistConfig'
 
 export const useTabsViewStore = defineStore('tabsView', () => {
   const tabsViews = ref<TagView[]>([])

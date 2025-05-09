@@ -10,15 +10,8 @@
           :closable="!item.isAffix"
         >
           <template #label>
-            <!-- <el-icon v-if="item.icon && tabsIcon && item.icon.startsWith('el-icon')" class="tabs-icon">
-              <component :is="item.icon.replace('el-icon-', '')"></component>
-            </el-icon>
-            <svg-icon v-else-if="item.icon && tabsIcon" :icon-class="item.icon" class="tabs-icon" />
-            {{ item.title }} -->
-            <SidebarMenuItemTitle
-              :icon="String(item?.icon || '')"
-              :title="String(item?.title || '')"
-            />
+            <MenuIcon :icon="item?.icon" class="mr-1" />
+            <span>{{ translateRouteTitle(item?.title || '') }}</span>
           </template>
         </el-tab-pane>
       </el-tabs>
@@ -30,11 +23,10 @@
 import Sortable from 'sortablejs'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAppStore, useTabsViewStore, useAuthStore } from '@/store'
-import SidebarMenuItemTitle from '../Sidebar/components/SidebarMenuItemTitle.vue'
-
+import { useAppStore, useTabsViewStore, useAuthStore } from '@/stores'
+import { translateRouteTitle } from '@/utils/i18n'
+import MenuIcon from '@/components/MenuIcon/index.vue' // 提取的图标组件
 import { TabsPaneContext, TabPaneName } from 'element-plus'
-import { debug } from 'console'
 
 const route = useRoute()
 const router = useRouter()
@@ -74,7 +66,7 @@ watch(
 
 // 初始化需要固定的 tabs
 const initTabs = () => {
-  authStore.flatMenuListGet.forEach((item:Menu.RouteVO) => {
+  authStore.flatMenuListGet.forEach((item: Menu.RouteVO) => {
     if (item.meta?.isAffix && !item.meta.isHide && !item.meta.isFull) {
       const tabsParams: TagView = {
         path: item.path,
@@ -112,19 +104,24 @@ const tabsDrop = () => {
 // Tab Click
 const tabClick = (tabItem: TabsPaneContext) => {
   const name = tabItem.props.name as string
-  router.push({name})
+  router.push({ name })
 }
 
 // Remove Tab
 const tabRemove = (name: TabPaneName) => {
   tabStore.delView(name as string)
-} 
+}
 </script>
 
 <style scoped lang="scss">
-.tabs-box{
+:deep(.el-tabs .el-tabs__item.is-active::before) {
+  bottom: 1px;
+}
+.tabs-box {
   box-sizing: border-box;
   height: $tabs-view-height;
-  border: 1px  solid $border-color;
+  padding: 0 $spacing-md;
+  border-bottom: 1px solid $border-color;
+  border-left: none;
 }
 </style>

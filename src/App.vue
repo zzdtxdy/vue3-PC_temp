@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import defaultSettings from '@/settings'
 import { ComponentSize } from '@/enums/settings/LayoutEnum'
-import { useAppStoreHook } from './store/modules/app'
+import { useAppStoreHook } from '@/stores/modules/app'
 
 const appStore = useAppStoreHook()
 

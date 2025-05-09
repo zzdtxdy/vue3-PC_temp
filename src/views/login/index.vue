@@ -108,7 +108,7 @@
 import AuthAPI, { LoginData } from '@/api/auth'
 import { FormInstance } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
-import { useUserStore } from '@/store/modules/user'
+import { useUserStore } from '@/stores/modules/user'
 import router from '@/router'
 import { getTimeState } from '@/utils'
 import { LocationQuery, RouteLocationRaw } from 'vue-router'

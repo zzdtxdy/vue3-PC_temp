@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2025-01-09 10:09:39
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-13 23:26:20
+ * @LastEditTime: 2025-04-26 18:34:30
  * @FilePath: \vue3-PC_temp\src\layout\components\Sidebar\index.vue
 -->
 <template>
@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { LayoutEnum } from '@/enums/settings/LayoutEnum'
-import { useAppStore, useAuthStore } from '@/store'
+import { useAppStore, useAuthStore } from '@/stores'
 import SidebarLogo from './components/SidebarLogo.vue'
 import SidebarMixTopMenu from './components/SidebarMixTopMenu.vue'
 import SidebarMenu from './components/SidebarMenu.vue'

@@ -6,7 +6,7 @@
  * @LastEditTime: 2025-01-31 13:48:58
  * @FilePath: \vue3-PC_temp\src\store\modules\dict.ts
  */
-import store from '@/store'
+import store from '@/stores'
 import DictionaryAPI, { type DictVO, type DictData } from '@/api/dict'
 import { useStorage } from '@vueuse/core'
 

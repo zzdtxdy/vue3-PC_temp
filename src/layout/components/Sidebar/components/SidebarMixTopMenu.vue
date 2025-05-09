@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute, LocationQueryRaw } from 'vue-router'
-import { useAuthStore, useAppStore } from '@/store'
+import { useAuthStore, useAppStore } from '@/stores'
 import { translateRouteTitle } from '@/utils/i18n'
 import variables from '@/styles/var.module.scss'
 import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'

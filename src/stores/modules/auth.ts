@@ -3,11 +3,11 @@
  * @Author: zhongzd
  * @Date: 2024-08-16 20:10:27
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-04-05 23:11:40
- * @FilePath: \vue3-PC_temp\src\store\modules\auth.ts
+ * @LastEditTime: 2025-05-04 20:58:47
+ * @FilePath: \vue3-PC_temp\src\stores\modules\auth.ts
  */
-import { getFlatMenuList, getShowMenuList } from '@/utils'
-import store from '@/store'
+import { getFlatMenuList, getShowMenuList, getAllBreadcrumbList } from '@/utils'
+import store from '@/stores'
 import router from '@/router'
 
 import MenuAPI from '@/api/menu'
@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
   const perms = ref<string[]>([])
   // 角色
   const roles = ref<string[]>([])
-  // 菜单权限列表 动态路由
+  // 菜单权限列表 ==> 这里的菜单没有经过任何处理
   const authMenuList = ref<Menu.RouteVO[]>([])
 
   // 混合模式左侧菜单路由
@@ -26,8 +26,11 @@ export const useAuthStore = defineStore('auth', () => {
   // 菜单权限列表 ==> 扁平化之后的一维数组菜单
   const flatMenuListGet = computed(() => getFlatMenuList(authMenuList.value))
 
-  // 菜单权限列表 ==> 扁平化之后的一维数组菜单
+  // 菜单权限列表 ==> 左侧菜单栏渲染，需要剔除 isHide == true
   const showMenuListGet = computed(() => getShowMenuList(authMenuList.value))
+  // 递归处理后的所有面包屑导航列表
+  const breadcrumbListGet = computed(() => getAllBreadcrumbList(authMenuList.value))
+
   /**
    * 生成动态路由
    */
@@ -77,7 +80,8 @@ export const useAuthStore = defineStore('auth', () => {
     setPerms,
     setRoles,
     roles,
-    perms
+    perms,
+    breadcrumbListGet
   }
 })
 

@@ -68,6 +68,10 @@ declare global {
     tabsView: boolean
     /** 是否 显示多标签导航图标 */
     tabsIcon: boolean
+    /** 是否显示面包屑导航 */
+    breadcrumb: boolean
+    /** 是否 显示面包屑导航图标 */
+    breadcrumbIcon: boolean
     // /** 是否显示侧边栏Logo */
     // sidebarLogo: boolean
     /** 导航栏布局(left|top|mix) */

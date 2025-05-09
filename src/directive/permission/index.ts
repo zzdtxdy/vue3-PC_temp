@@ -6,7 +6,7 @@
  * @LastEditTime: 2025-03-23 11:41:38
  * @FilePath: \vue3-PC_temp\src\directive\permission\index.ts
  */
-import { useAuthStoreHook } from '@/store/modules/auth'
+import { useAuthStoreHook } from '@/stores/modules/auth'
 import { Directive, DirectiveBinding } from 'vue'
 
 /**
