@@ -3,7 +3,7 @@
     <!-- 桌面端显示 -->
     <template v-if="isDesktop">
       <!-- 搜索 -->
-      <MenuSearch />
+      <SearchMenu />
 
       <!-- 全屏 -->
       <Fullscreen />
@@ -21,37 +21,37 @@
     <!-- 用户头像（个人中心、注销登录等） -->
     <el-dropdown trigger="click">
       <div class="user-profile">
-        <img class="user-profile__avatar" :src="userStore.userInfo.value.avatar" />
-        <span class="user-profile__name">{{ userStore.userInfo.value.username }}</span>
+        <img class="user-profile__avatar" :src="userStore.userInfo.avatar" />
+        <span class="user-profile__name">{{ userStore.userInfo.username }}</span>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="handleProfileClick">
-            {{ $t('navbar.profile') }}
+            {{ t('navbar.profile') }}
           </el-dropdown-item>
           <el-dropdown-item divided @click="logout">
-            {{ $t('navbar.logout') }}
+            {{ t('navbar.logout') }}
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
 
     <!-- 设置面板 -->
-    <div v-if="defaultSettings.showSettings" @click="appStore.showSettings = true">
+    <div v-if="defaultSettings.showSettings" @click="">
       <div class="i-svg:setting" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import SearchMenu from './SearchMenu.vue'
+const { t } = useI18n()
 import defaultSettings from '@/settings'
 import { DeviceEnum } from '@/enums/settings/DeviceEnum'
 import { useAppStore, useUserStore, useTabsViewStore } from '@/stores'
 
-import { SidebarColor, ThemeMode } from '@/enums/settings/ThemeEnum'
-
 const appStore = useAppStore()
 const userStore = useUserStore()
-const tabsViewStore = useTabsViewStore()
+const tagsViewStore = useTabsViewStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -70,14 +70,6 @@ const navbarRightClass = computed(() => {
   if (appStore.isDark) {
     return 'navbar__right--white'
   }
-
-  // 如果侧边栏是经典蓝
-  if (appStore.sidebarColorScheme === SidebarColor.CLASSIC_BLUE) {
-    return 'navbar__right--white'
-  }
-
-  // 默认返回空字符串
-  return ''
 })
 
 /**
@@ -93,7 +85,7 @@ function logout() {
     userStore
       .logout()
       .then(() => {
-        tabsViewStore.delAllViews()
+        tagsViewStore.delAllViews()
       })
       .then(() => {
         router.push(`/login?redirect=${route.fullPath}`)
@@ -108,10 +100,11 @@ function logout() {
   align-items: center;
   justify-content: center;
   & > * {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 40px;
     height: $navbar-height;
-    line-height: $navbar-height;
     color: var(--el-text-color);
     text-align: center;
     cursor: pointer;
@@ -138,6 +131,11 @@ function logout() {
 .layout-top .navbar__right--white > *,
 .layout-mix .navbar__right--white > * {
   color: #ffffff;
+  // 强制所有svg图标为白色（包括通知图标）
+  :deep(svg) {
+    color: #ffffff;
+    fill: #ffffff;
+  }
 }
 .dark .navbar__right > *:hover {
   color: #cccccc;

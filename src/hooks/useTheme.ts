@@ -54,7 +54,7 @@ export const useTheme = () => {
         `${modifyAlpha(newThemeColor, 1 - i * 0.1)}`
       )
     }
-    appStore.setGlobalState('themeColor', newThemeColor)
+    appStore.themeColor = newThemeColor
   }
 
   return {

@@ -11,7 +11,7 @@
   <el-icon v-if="icon?.startsWith('el-icon')" class="sub-el-icon" :style="`font-size: ${width}`">
     <component :is="icon.replace('el-icon-', '')" />
   </el-icon>
-  <svg-icon v-else-if="icon" :name="icon" :size="width"   />
+  <svg-icon v-else-if="icon" :name="icon" :size="width" />
   <svg-icon v-else name="menu" :size="width" />
 </template>
 
@@ -21,7 +21,7 @@ const { icon } = defineProps({
     type: String,
     default: ''
   },
-  width : {
+  width: {
     type: String,
     default: '18px'
   }

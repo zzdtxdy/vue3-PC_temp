@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-07-06 21:04:59
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-05-04 21:05:04
+ * @LastEditTime: 2025-05-11 16:11:46
  * @FilePath: \vue3-PC_temp\eslint.config.js
  */
 // 导入 ESLint 配置所需的模块和插件
@@ -63,8 +63,7 @@ export default [
           varsIgnorePattern: '^[A-Z0-9_]+$', // 忽略全大写的变量（通常是枚举）
           ignoreRestSiblings: true // 忽略解构赋值中未使用的同级变量
         }
-      ],
-      'no-undef': 'off' // 关闭未定义变量检查
+      ]
     }
   },
   // JavaScript 推荐规则
@@ -87,7 +86,8 @@ export default [
       '@typescript-eslint/no-empty-function': 'off', // 允许空函数
       '@typescript-eslint/no-empty-object-type': 'off', // 允许空对象类型
       '@typescript-eslint/no-unused-vars': 'warn', // 将未使用变量规则改为警告级别
-      '@typescript-eslint/no-undef': 'off' // 关闭 TypeScript 的未定义变量检查
+      '@typescript-eslint/no-undef': 'off', // 关闭 TypeScript 的未定义变量检查
+      'no-undef': 'off' // 关闭未定义变量检查
     }
   },
 
@@ -106,7 +106,8 @@ export default [
     rules: {
       ...pluginVue.configs.recommended.rules, // Vue 推荐规则
       'vue/no-v-html': 'off', // 允许使用 v-html 指令
-      'vue/multi-word-component-names': 'off' // 允许单单词组件名
+      'vue/multi-word-component-names': 'off', // 允许单单词组件名
+      'no-undef': 'off' // 关闭未定义变量检查
     }
   }
 ]

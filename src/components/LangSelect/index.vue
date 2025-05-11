@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2024-08-25 19:52:03
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-02-09 11:52:52
+ * @LastEditTime: 2025-05-11 19:09:22
  * @FilePath: \vue3-PC_temp\src\components\LangSelect\index.vue
 -->
 <template>
@@ -53,7 +53,7 @@ onMounted(() => {
 })
 function handleLanguageChange(lang: LanguageType, showMessage = true) {
   locale.value = lang
-  globalStore.setGlobalState('language', lang)
+  globalStore.language = lang
   if (showMessage) {
     ElMessage.success(t('langSelect.message.success'))
   }

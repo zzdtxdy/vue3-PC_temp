@@ -90,7 +90,7 @@ watch(
 // 监听窗口宽度变化，调整设备类型和侧边栏状态
 watchEffect(() => {
   const isDesktop = width.value >= WIDTH_DESKTOP
-  appStore.setGlobalState('device', isDesktop ? DeviceEnum.DESKTOP : DeviceEnum.MOBILE)
+  appStore.device = isDesktop ? DeviceEnum.DESKTOP : DeviceEnum.MOBILE
   if (isDesktop) {
     appStore.openSideBar()
   } else {

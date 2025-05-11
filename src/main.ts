@@ -10,7 +10,7 @@ import pinia from '@/stores'
 import I18n from '@/lang/index'
 // element icons
 import * as Icons from '@element-plus/icons-vue'
-import '@/styles/element.scss';
+import '@/styles/element.scss'
 // element dark css
 import 'element-plus/theme-chalk/dark/css-vars.css'
 // custom dark css
@@ -29,5 +29,5 @@ Object.keys(Icons).forEach((key) => {
 })
 
 // 注册插件
-app.use(directive).use(router).use(I18n).use(pinia)
+app.use(directive).use(pinia).use(router).use(I18n)
 app.mount('#app')

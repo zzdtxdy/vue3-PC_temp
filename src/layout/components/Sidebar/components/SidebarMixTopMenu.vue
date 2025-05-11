@@ -74,12 +74,12 @@ const initializeActiveTopMenuPath = () => {
     currentPath.split('/').filter(Boolean).length > 1
       ? currentPath.match(/^\/[^/]+/)?.[0] || '/'
       : '/'
-  appStore.setGlobalState('activeTopMenuPath', activeTopMenuPath)
+  appStore.activeTopMenuPath = activeTopMenuPath
 }
 
 // 处理菜单点击事件
 const handleMenuSelect = (routePath: string) => {
-  appStore.setGlobalState('activeTopMenuPath', routePath) // 设置激活的顶部菜单
+  appStore.activeTopMenuPath = routePath // 设置激活的顶部菜单
   authStore.setMixLeftMenuList(routePath) // 更新左侧菜单
   navigateToFirstLeftMenu(authStore.mixLeftMenuList) // 跳转到左侧第一个菜单
 }

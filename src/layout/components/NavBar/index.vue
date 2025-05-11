@@ -3,7 +3,7 @@
  * @Author: zhongzd
  * @Date: 2025-02-08 21:35:43
  * @LastEditors: zhongzd
- * @LastEditTime: 2025-05-04 23:33:42
+ * @LastEditTime: 2025-05-11 17:55:46
  * @FilePath: \vue3-PC_temp\src\layout\components\NavBar\index.vue
 -->
 <template>
@@ -15,14 +15,14 @@
       <Breadcrumb />
     </div>
     <!-- 导航栏右侧 -->
-    <!-- <NavbarRight /> -->
+    <NavbarRight />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAppStoreHook } from '@/stores/modules/app'
 import CollapseIcon from './components/CollapseIcon.vue'
 import Breadcrumb from './components/Breadcrumb.vue'
+import NavbarRight from './components/NavbarRight.vue'
 </script>
 
 <style lang="scss" scoped>
